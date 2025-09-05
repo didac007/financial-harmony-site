@@ -3,277 +3,490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Inicia en Crypto con Armonía - Curso de BTC con estrategias automatizadas, herramientas avanzadas y soporte 24/7.">
-    <title>Inicia en Crypto con Armonía - Financial Harmony</title>
-    <link rel="icon" href="https://bitcoin.org/img/icons/opengraph.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <title>Financial Harmony Dashboard</title>
     <style>
+        /* General Styles */
         body {
-            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            padding: 0;
-            color: #ffffff;
-            background-color: #0A2540;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fd;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
-        header {
-            background: linear-gradient(135deg, #0A2540, #1E3A8A);
-            padding: 100px 20px;
-            text-align: center;
-            position: relative;
+
+        /* Sidebar */
+        .sidebar {
+            width: 60px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100%;
+            z-index: 10;
         }
-        header h1 {
-            font-size: 3em;
-            margin: 0;
-            color: #F7931A;
-        }
-        header p {
-            font-size: 1.5em;
-            margin: 20px 0;
-        }
-        .cta-button {
-            background: linear-gradient(90deg, #F7931A, #FFD700);
-            color: #0A2540;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
+
+        .sidebar-icon {
+            font-size: 24px;
+            margin-bottom: 20px;
             cursor: pointer;
-            transition: transform 0.3s;
+            color: #666;
         }
-        .cta-button:hover {
-            transform: translateY(-2px);
+
+        .sidebar-icon.active {
+            color: #007bff;
         }
-        .video-placeholder {
-            margin: 20px 0;
-            background: #000;
-            padding: 50px;
+
+        .sidebar-icon:hover {
+            color: #007bff;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 60px;
+            right: 0;
+            height: 60px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 9;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+            margin-right: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            margin-right: auto;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .nav-tab.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .crypto-prices {
+            display: flex;
+            align-items: center;
+        }
+
+        .crypto-price {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .crypto-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background-color: orange; /* Placeholder for icons */
             color: #fff;
             text-align: center;
-            border-radius: 10px;
+            line-height: 20px;
         }
-        section {
-            padding: 60px 20px;
-            text-align: center;
+
+        .price-change.up {
+            color: green;
         }
-        .features {
-            background: #1E3A8A;
+
+        .price-change.down {
+            color: red;
         }
-        .features h2, .testimonials h2, .pricing h2 {
-            color: #F7931A;
-            font-size: 2.5em;
-        }
-        .feature-grid {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .feature {
-            width: 300px;
-            margin: 20px;
-        }
-        .testimonials {
-            background: #0A2540;
-        }
-        .testimonial {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            margin: 20px;
-            border-radius: 10px;
-        }
-        .pricing {
-            background: #1E3A8A;
-        }
-        .price-cards {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .price-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            margin: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        .price-card h3 {
-            color: #F7931A;
-        }
-        footer {
-            background: #0A2540;
-            padding: 20px;
-            text-align: center;
-        }
-        #questionnaire {
-            background: #0A2540;
-            padding: 60px 20px;
-        }
-        .question {
-            margin: 20px 0;
-        }
-        .question input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #FFD700;
-            background: rgba(255, 255, 255, 0.2);
-            color: #FFFFFF;
+
+        .create-bot {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 15px;
             border-radius: 5px;
-        }
-        #verify-button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(90deg, #F7931A, #FFD700);
-            color: #0A2540;
-            border: none;
-            border-radius: 5px;
+            margin-left: 20px;
             cursor: pointer;
         }
-        #result {
+
+        .notifications {
+            margin-left: 10px;
+            position: relative;
+        }
+
+        .bell {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .user-profile {
+            margin-left: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 60px;
+            margin-top: 60px;
+            padding: 20px;
+            overflow-y: auto;
+            width: calc(100% - 60px);
+            height: calc(100vh - 60px);
+        }
+
+        .upgrade-banner {
+            background-color: #e6f0ff;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .upgrade-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .dashboard-content, .trades-content, .portfolio-content, .bots-signals-content, .bots-tradingview-content, .trading-terminal-content, .marketplace-content, .signals-content, .course-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Dropdown Menus */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Course Section */
+        .social-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .social-item {
+            margin-bottom: 10px;
+        }
+
+        .social-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #telegram-link {
+            display: none;
             margin-top: 20px;
-            color: #FFD700;
+            padding: 10px;
+            background-color: #e6f0ff;
+            border-radius: 5px;
+        }
+
+        /* Placeholder for charts and graphs */
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="financial-harmony-logo.png" alt="Financial Harmony Logo" style="max-width: 200px;">
-        <h1>Inicia en Crypto con Armonía</h1>
-        <p>Estrategias avanzadas para trading de BTC. Automatización para principiantes y pros. Soporte 24/7.</p>
-        <div class="video-placeholder">Play Video (Placeholder for Introductory Course Video)</div>
-        <button class="cta-button">14 días de prueba gratuita. Sin tarjeta requerida.</button>
-        <div>
-            <img src="exchange-placeholder1.png" alt="Exchange 1" style="width: 50px;">
-            <img src="exchange-placeholder2.png" alt="Exchange 2" style="width: 50px;">
-            <!-- Agrega más placeholders para exchanges -->
-        </div>
-    </header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-icon active" data-section="dashboard">🏠</div> <!-- Dashboard -->
+        <div class="sidebar-icon" data-section="trades">📊</div> <!-- Trades -->
+        <div class="sidebar-icon" data-section="portfolio">💼</div> <!-- Portfolio -->
+        <div class="sidebar-icon" data-section="bots-signals">🤖</div> <!-- My Signals Bots -->
+        <div class="sidebar-icon" data-section="bots-tradingview">📈</div> <!-- My TradingView Bots -->
+        <div class="sidebar-icon" data-section="trading-terminal">🖥️</div> <!-- Trading Terminal -->
+        <div class="sidebar-icon" data-section="marketplace">🛒</div> <!-- Marketplace -->
+        <div class="sidebar-icon" data-section="signals">📡</div> <!-- Signals -->
+        <div class="sidebar-icon" data-section="course">📚</div> <!-- Curso BTC Esta -->
+    </div>
 
-    <section class="features">
-        <h2>Automatiza tu aprendizaje en crypto</h2>
-        <div class="feature-grid">
-            <div class="feature">
-                <img src="feature-icon1.png" alt="Copy Traders">
-                <h3>Copia estrategias de expertos</h3>
-                <p>1. Explora lecciones. 2. Únete al grupo. 3. Copia y aprende.</p>
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="logo">Financial Harmony</div>
+        <div class="nav-tabs">
+            <div class="nav-tab active">Live Trading</div>
+            <div class="nav-tab">Demo</div>
+        </div>
+        <div class="crypto-prices">
+            <div class="crypto-price">
+                <div class="crypto-icon">B</div>
+                BTC/USDT $112.613.9 <span class="price-change up">2.63% ▲</span>
             </div>
-            <div class="feature">
-                <img src="feature-icon2.png" alt="Bots">
-                <h3>Usa herramientas avanzadas</h3>
-                <p>Configura bots para simulaciones de trading, entradas múltiples, trailing features.</p>
+            <div class="crypto-price">
+                <div class="crypto-icon">E</div>
+                ETH/USDT $442.46 <span class="price-change up">2.08% ▲</span>
             </div>
-            <div class="feature">
-                <img src="feature-icon3.png" alt="Exchanges">
-                <h3>Aprende sobre exchanges top</h3>
-                <p>Binance, Coinbase, Kraken, y más – todo en un lugar.</p>
+            <div class="crypto-price">
+                <div class="crypto-icon">A</div>
+                ADA/USDT $0.839 <span class="price-change up">3.66% ▲</span>
+            </div>
+            <div class="crypto-price">
+                <div class="crypto-icon">N</div>
+                NOT/USDT $0.001916 <span class="price-change up">5.56% ▲</span>
+            </div>
+            <div class="crypto-price">
+                <div class="crypto-icon">D</div>
+                DOGE/USDT $0.21935 <span class="price-change up">2.93% ▲</span>
             </div>
         </div>
-    </section>
+        <div class="create-bot">+ Create Bot</div>
+        <div class="notifications">
+            <span class="bell">🔔</span>
+            <span class="notification-count">25</span>
+        </div>
+        <div class="user-profile"></div>
+    </div>
 
-    <section class="testimonials">
-        <h2>Lo que dicen nuestros estudiantes</h2>
-        <div class="testimonial">
-            <p>"Este curso cambió mi forma de invertir en BTC. Muy práctico."</p>
-            <p>- Juan R. ★★★★★</p>
+    <!-- Main Content -->
+    <div class="main">
+        <div class="upgrade-banner">
+            You're using the Free Package. Upgrade now for additional usage! <a href="#" class="upgrade-button">Upgrade</a>
         </div>
-        <div class="testimonial">
-            <p>"Excelente soporte y estrategias fáciles de seguir."</p>
-            <p>- Maria S. ★★★★★</p>
-        </div>
-        <!-- Agrega más testimonials -->
-    </section>
 
-    <section class="pricing">
-        <h2>Precios transparentes</h2>
-        <div class="price-cards">
-            <div class="price-card">
-                <h3>Gratis</h3>
-                <p>$0</p>
-                <ul>
-                    <li>Lecciones básicas</li>
-                    <li>1 módulo</li>
-                </ul>
-                <button class="cta-button">Empezar</button>
-            </div>
-            <div class="price-card">
-                <h3>Popular</h3>
-                <p>$32.99/mes</p>
-                <ul>
-                    <li>Acceso completo</li>
-                    <li>Comunidad premium</li>
-                    <li>Certificación</li>
-                </ul>
-                <button class="cta-button">Suscribir</button>
-            </div>
-            <div class="price-card">
-                <h3>Premium</h3>
-                <p>$52.99/mes</p>
-                <ul>
-                    <li>Todo incluido</li>
-                    <li>Mentorías personalizadas</li>
-                    <li>Acceso prioritario</li>
-                </ul>
-                <button class="cta-button">Suscribir</button>
-            </div>
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section dashboard-content active">
+            <h2>Dashboard</h2>
+            <p>Open Trades: 0 hot trades (out of 0)</p>
+            <div class="chart-placeholder">No open trades</div>
+            <button class="create-bot">Create Trade</button>
+            <!-- Add more elements from screenshot -->
         </div>
-    </section>
 
-    <section id="questionnaire">
-        <h2>Verifica tu seguimiento para acceder al curso</h2>
-        <p>Para acceder, sigue nuestras cuentas y responde estas preguntas simples. La verificación es case-insensitive y tolerante a errores menores.</p>
-        <div class="question">
-            <label>B1. Comenta el último post en X:</label>
-            <input type="text" id="q1">
+        <!-- Trades Section -->
+        <div id="trades" class="section trades-content">
+            <h2>Trades</h2>
+            <div class="nav-tabs">
+                <div class="nav-tab active">Open</div>
+                <div class="nav-tab">Closed</div>
+            </div>
+            <div class="chart-placeholder">Trades Amount Allocation: $0 Total</div>
+            <div class="chart-placeholder">Number of Trades: No data collected</div>
+            <!-- Add filters, export, create trade -->
         </div>
-        <div class="question">
-            <label>B2. Comenta el último story/post en Instagram:</label>
-            <input type="text" id="q2">
-        </div>
-        <div class="question">
-            <label>B3. Comenta nuestro último directo en YouTube:</label>
-            <input type="text" id="q3">
-        </div>
-        <div class="question">
-            <label>B4. ¿Cuántos seguidores tenemos en YouTube? (Aproximado)</label>
-            <input type="text" id="q4">
-        </div>
-        <div class="question">
-            <label>B5. ¿Diste like/retweet al post más reciente? (Sí/No)</label>
-            <select id="q5">
-                <option value="">Selecciona</option>
-                <option value="Sí">Sí</option>
-                <option value="No">No</option>
-            </select>
-        </div>
-        <button id="verify-button">Verificar y Acceder</button>
-        <div id="result"></div>
-    </section>
 
-    <footer>
-        <p>© 2025 Financial Harmony - Todos los derechos reservados</p>
-        <p>Prueba de 14 días gratuita. Sin tarjeta requerida.</p>
-    </footer>
+        <!-- Portfolio Section -->
+        <div id="portfolio" class="section portfolio-content">
+            <h2>Portfolio</h2>
+            <div class="chart-placeholder">Accounts Allocation: $95.33 Total</div>
+            <div class="chart-placeholder">Portfolio Change: No data collected</div>
+            <!-- Add accounts list, filters -->
+            <ul>
+                <li>My Bitget-Futures-8D21</li>
+                <li>My Bitget-Spot-8D21</li>
+            </ul>
+        </div>
+
+        <!-- My Signals Bots Section -->
+        <div id="bots-signals" class="section bots-signals-content">
+            <h2>My Signals Bots</h2>
+            <p>Revolutionizing auto trading with advanced strategies...</p>
+            <button>Watch Video</button>
+            <button>Learn More</button>
+            <!-- Add info cards -->
+        </div>
+
+        <!-- My TradingView Bots Section -->
+        <div id="bots-tradingview" class="section bots-tradingview-content">
+            <h2>My TradingView Bots</h2>
+            <p>Combine the power of TradingView with Cornix's automation...</p>
+            <button>Watch Video</button>
+            <button>Learn More</button>
+            <!-- Add info cards -->
+        </div>
+
+        <!-- Trading Terminal Section -->
+        <div id="trading-terminal" class="section trading-terminal-content">
+            <h2>Trading Terminal</h2>
+            <form>
+                <label>Account: My-Bitget-Spot-8D21</label>
+                <label>Symbol: BTC/USDT</label>
+                <label>New Amount (USDT)</label>
+                <input type="text">
+                <!-- Add more fields -->
+                <button>Create Trade</button>
+            </form>
+        </div>
+
+        <!-- Marketplace Section -->
+        <div id="marketplace" class="section marketplace-content">
+            <h2>Marketplace</h2>
+            <ul>
+                <li>The MARTINGALE Bot - PnL (6M): 109.69% ↑</li>
+                <li>Crypto Dreams - PnL (6M): 95.56% ↑</li>
+                <!-- Add more bots with ratings, risks -->
+            </ul>
+        </div>
+
+        <!-- Signals Section -->
+        <div id="signals" class="section signals-content">
+            <h2>Signals</h2>
+            <div class="nav-tabs">
+                <div class="nav-tab active">Open</div>
+                <div class="nav-tab">Closed</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Exchanges</th>
+                        <th>Price</th>
+                        <th>Profit</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                        <th>Groups</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Empty for now -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Curso BTC Esta Section -->
+        <div id="course" class="section course-content">
+            <h2>Curso BTC Esta</h2>
+            <p>Para acceder al curso, sigue todos los perfiles en redes sociales a continuación y marca las casillas una vez que lo hayas hecho. Una vez completadas todas las tareas, se revelará el enlace de Telegram.</p>
+            <ul class="social-list">
+                <li class="social-item">
+                    <input type="checkbox" class="follow-check" data-social="x">
+                    Sigue en X: <a href="https://x.com/financialharmon" target="_blank" class="social-link">@financialharmon</a>
+                </li>
+                <li class="social-item">
+                    <input type="checkbox" class="follow-check" data-social="youtube">
+                    Sigue en YouTube: <a href="https://www.youtube.com/@FinancialHarmony-z1n" target="_blank" class="social-link">@FinancialHarmony-z1n</a>
+                </li>
+                <li class="social-item">
+                    <input type="checkbox" class="follow-check" data-social="instagram">
+                    Sigue en Instagram: <a href="https://www.instagram.com/jrfinancialharmony" target="_blank" class="social-link">jrfinancialharmony</a>
+                </li>
+                <li class="social-item">
+                    <input type="checkbox" class="follow-check" data-social="tiktok">
+                    Sigue en TikTok: <a href="https://www.tiktok.com/@financial.harmony0" target="_blank" class="social-link">financial.harmony0</a>
+                </li>
+            </ul>
+            <div id="telegram-link">
+                <p>¡Felicidades! Has completado las tareas. Únete al grupo de Telegram para el curso: <a href="https://t.me/+k6JRjS5U9vY3Yjg0" target="_blank">Inicia en Crypto con Armonía</a></p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        document.getElementById('verify-button').addEventListener('click', function() {
-            const respuestasCorrectas = {
-                q1: "aprende en armonia",
-                q2: "una imagen motivacional con una cita sobre aprendizaje",
-                q3: "inicia en crypto con armonía",
-                q4: "más de 50",
-                q5: "sí"
-            };
-            const q1 = document.getElementById('q1').value.trim().toLowerCase();
-            const q2 = document.getElementById('q2').value.trim().toLowerCase();
-            const q3 = document.getElementById('q3').value.trim().toLowerCase();
-            const q4 = document.getElementById('q4').value.trim().toLowerCase();
-            const q5 = document.getElementById('q5').value.trim().toLowerCase();
+        // Sidebar Navigation
+        const sidebarIcons = document.querySelectorAll('.sidebar-icon');
+        const sections = document.querySelectorAll('.section');
 
-            if (q1 === respuestasCorrectas.q1 && q2 === respuestasCorrectas.q2 && q3 === respuestasCorrectas.q3 && q4 === respuestasCorrectas.q4 && q5 === respuestasCorrectas.q5) {
-                document.getElementById('result').innerHTML = '¡Acceso concedido! Únete al curso en Telegram: <a href="https://t.me/+k6JRjS5U9vY3Yjg0">Enlace de Invitación</a>';
-            } else {
-                document.getElementById('result').innerHTML = 'Respuestas incorrectas. Verifica que sigas las cuentas e intenta de nuevo.';
-            }
+        sidebarIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                sidebarIcons.forEach(i => i.classList.remove('active'));
+                icon.classList.add('active');
+
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(icon.dataset.section).classList.add('active');
+            });
         });
+
+        // Nav Tabs (example for Trades, etc.)
+        const navTabs = document.querySelectorAll('.nav-tab');
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                navTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // Add logic to switch content if needed
+            });
+        });
+
+        // Course Follow Checks
+        const followChecks = document.querySelectorAll('.follow-check');
+        const telegramLink = document.getElementById('telegram-link');
+
+        followChecks.forEach(check => {
+            check.addEventListener('change', () => {
+                const allChecked = Array.from(followChecks).every(c => c.checked);
+                if (allChecked) {
+                    telegramLink.style.display = 'block';
+                } else {
+                    telegramLink.style.display = 'none';
+                }
+            });
+        });
+
+        // Placeholder for dropdowns (add more as needed)
     </script>
 </body>
 </html>
