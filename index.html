@@ -10,12 +10,17 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fd;
+            background-color: #e6f0ff; /* Changed background color to light blue inspired by logo */
             color: #333;
             display: flex;
             height: 100vh;
             overflow: hidden;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark {
+            background-color: #1a1a1a;
+            color: #ddd;
         }
 
         /* Sidebar */
@@ -33,9 +38,18 @@
             transition: width 0.3s ease, background-color 0.3s ease;
         }
 
+        body.dark .sidebar {
+            background-color: #333;
+            border-right: 1px solid #444;
+        }
+
         .sidebar:hover {
             width: 250px;
             background-color: #f0f0f0;
+        }
+
+        body.dark .sidebar:hover {
+            background-color: #444;
         }
 
         .sidebar-icon {
@@ -48,6 +62,10 @@
             width: 100%;
             padding: 0 20px;
             transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark .sidebar-icon {
+            color: #bbb;
         }
 
         .sidebar-icon .icon {
@@ -73,6 +91,10 @@
             transform: translateX(5px);
         }
 
+        body.dark .sidebar-icon:hover {
+            color: #4da6ff;
+        }
+
         /* Topbar */
         .topbar {
             position: fixed;
@@ -86,19 +108,25 @@
             align-items: center;
             padding: 0 20px;
             z-index: 9;
-            transition: left 0.3s ease;
+            transition: left 0.3s ease, background-color 0.3s ease, border-bottom 0.3s ease;
+        }
+
+        body.dark .topbar {
+            background-color: #333;
+            border-bottom: 1px solid #444;
         }
 
         .sidebar:hover ~ .topbar {
             left: 250px;
         }
 
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            color: #000;
-            margin-right: 20px;
-            transition: font-size 0.3s ease;
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
         }
 
         .nav-tabs {
@@ -115,6 +143,10 @@
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
         }
 
+        body.dark .nav-tab {
+            color: #ddd;
+        }
+
         .nav-tab.active {
             background-color: #007bff;
             color: #fff;
@@ -125,6 +157,10 @@
             background-color: #0056b3;
             color: #fff;
             transform: scale(1.05);
+        }
+
+        body.dark .nav-tab:hover {
+            background-color: #004080;
         }
 
         .crypto-prices {
@@ -184,6 +220,14 @@
             transform: scale(1.05);
         }
 
+        body.dark .create-bot {
+            background-color: #4da6ff;
+        }
+
+        body.dark .create-bot:hover {
+            background-color: #3385ff;
+        }
+
         .notifications {
             margin-left: 10px;
             position: relative;
@@ -223,10 +267,46 @@
             background-color: #ccc;
             cursor: pointer;
             transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        body.dark .user-profile {
+            background-color: #666;
         }
 
         .user-profile:hover {
             transform: scale(1.1);
+        }
+
+        .settings-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        body.dark .settings-dropdown {
+            background-color: #333;
+        }
+
+        .settings-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        body.dark .settings-dropdown button {
+            color: #ddd;
         }
 
         /* Main Content */
@@ -245,12 +325,16 @@
         }
 
         .upgrade-banner {
-            background-color: #e6f0ff;
+            background-color: #d9eaff;
             padding: 10px;
             text-align: center;
             margin-bottom: 20px;
             border-radius: 5px;
             animation: pulse 2s infinite;
+        }
+
+        body.dark .upgrade-banner {
+            background-color: #2a2a2a;
         }
 
         .upgrade-button {
@@ -281,7 +365,12 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        body.dark .dashboard-content, body.dark .trades-content, body.dark .portfolio-content, body.dark .bots-signals-content, body.dark .bots-tradingview-content, body.dark .trading-terminal-content, body.dark .marketplace-content, body.dark .signals-content, body.dark .course-content {
+            background: #333;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
         }
 
         /* Charts */
@@ -290,35 +379,6 @@
             height: 200px;
             width: 100%;
             margin-bottom: 20px;
-        }
-
-        .pie-chart {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: conic-gradient(#007bff 0% 50%, #ccc 50% 100%);
-            margin: 0 auto;
-        }
-
-        .gauge {
-            width: 100px;
-            height: 50px;
-            background: conic-gradient(green 0% 70%, yellow 70% 85%, red 85% 100%);
-            border-radius: 50px 50px 0 0;
-            position: relative;
-            transform: rotate(180deg);
-        }
-
-        .gauge:before {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10px;
-            height: 10px;
-            background: black;
-            border-radius: 50%;
         }
 
         /* Course Section */
@@ -334,9 +394,51 @@
             display: none;
             margin-top: 20px;
             padding: 10px;
-            background-color: #e6f0ff;
+            background-color: #d9eaff;
             border-radius: 5px;
             animation: bounceIn 0.5s ease;
+        }
+
+        body.dark #telegram-link {
+            background-color: #2a2a2a;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: #f8f9fd;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        body.dark .stat-card {
+            background: #444;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: #f8f9fd;
+            padding: 10px;
+            border-radius: 5px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        body.dark .info-card {
+            background: #444;
+        }
+
+        /* Bot Cards */
+        .bot-card {
+            background: #f8f9fd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        body.dark .bot-card {
+            background: #444;
         }
 
         /* Animations */
@@ -379,7 +481,7 @@
 
     <!-- Topbar -->
     <div class="topbar">
-        <div class="logo">Financial Harmony</div>
+        <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div> <!-- Add your logo image path here -->
         <div class="nav-tabs">
             <div class="nav-tab active">Live Trading</div>
             <div class="nav-tab">Demo</div>
@@ -411,7 +513,12 @@
             <span class="bell">🔔</span>
             <span class="notification-count">25</span>
         </div>
-        <div class="user-profile"></div>
+        <div class="user-profile">
+            <div class="settings-dropdown">
+                <button id="theme-toggle">Toggle Dark Mode</button>
+                <!-- Add more settings here if needed -->
+            </div>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -447,6 +554,9 @@
                     <p>0</p>
                 </div>
             </div>
+            <div class="chart-container">
+                <canvas id="dashboard-overview-chart"></canvas>
+            </div>
         </div>
 
         <!-- Trades Section -->
@@ -472,6 +582,25 @@
                     <p>No data collected</p>
                 </div>
             </div>
+            <table style="width: 100%; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Trade ID</th>
+                        <th>Symbol</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>BTC/USDT</td>
+                        <td>$100</td>
+                        <td>Open</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
         </div>
 
         <!-- Portfolio Section -->
@@ -497,12 +626,15 @@
                 <li>My Bitget-Futures-8D21</li>
                 <li>My Bitget-Spot-8D21</li>
             </ul>
+            <div class="chart-container">
+                <canvas id="portfolio-asset-chart"></canvas>
+            </div>
         </div>
 
         <!-- My Signals Bots Section -->
         <div id="bots-signals" class="section bots-signals-content">
             <h2>My Signals Bots</h2>
-            <div style="background: #e6f0ff; padding: 20px; border-radius: 10px;">
+            <div style="background: #d9eaff; padding: 20px; border-radius: 10px;">
                 <h3>Welcome to Signals Bots!</h3>
                 <p>Revolutionizing auto trading with advanced strategies, full flexibility, and a user-friendly interface. The Signals Bots are suitable for both novice and advanced traders. These smart bots redefine trading automation, offering hassle-free following of expert trades without requiring extensive time or effort.</p>
                 <button>Watch Video</button>
@@ -525,12 +657,13 @@
                     <a href="#">Read More</a>
                 </div>
             </div>
+            <button class="create-bot">Create Signals Bot</button>
         </div>
 
         <!-- My TradingView Bots Section -->
         <div id="bots-tradingview" class="section bots-tradingview-content">
             <h2>My TradingView Bots</h2>
-            <div style="background: #e6f0ff; padding: 20px; border-radius: 10px;">
+            <div style="background: #d9eaff; padding: 20px; border-radius: 10px;">
                 <h3>Welcome to TradingView Bots!</h3>
                 <p>Combine the power of TradingView with Cornix's advanced trading automation. Our TradingView Bots let you use your own alerts and Pine-scripts or copy those you trust to ensure you never miss an opportunity. Trade on your terms with an easy and enjoyable blend of world-class indicators and cutting-edge automation.</p>
                 <button>Watch Video</button>
@@ -553,11 +686,18 @@
                     <a href="#">Read More</a>
                 </div>
             </div>
+            <button class="create-bot">Create TradingView Bot</button>
         </div>
 
         <!-- Trading Terminal Section -->
         <div id="trading-terminal" class="section trading-terminal-content">
             <h2>Trading Terminal</h2>
+            <div class="nav-tabs">
+                <div class="nav-tab active">General</div>
+                <div class="nav-tab">Entries</div>
+                <div class="nav-tab">Take-Profits</div>
+                <div class="nav-tab">Stop</div>
+            </div>
             <form>
                 <label>Account</label>
                 <select>
@@ -584,7 +724,7 @@
                     <p>★★★★☆ (4.2)</p>
                     <p>PnL (6M): 109.69% ↑</p>
                     <p>PnL (3M): 67.68% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%);"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%); height: 10px; border-radius: 5px;"></div>
                     <p>Medium Risk</p>
                     <button>Free Trial $ $ $</button>
                 </div>
@@ -593,11 +733,28 @@
                     <p>Not enough reviews</p>
                     <p>PnL (6M): 95.56% ↑</p>
                     <p>PnL (3M): 42.49% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%);"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%); height: 10px; border-radius: 5px;"></div>
                     <p>Low Risk</p>
                     <button>Free Trial $ $ $</button>
                 </div>
-                <!-- Add more bots -->
+                <div class="bot-card">
+                    <h3>GreenCrypto Swing</h3>
+                    <p>Not enough reviews</p>
+                    <p>PnL (6M): 51.92% ↑</p>
+                    <p>PnL (3M): 15.77% ↑</p>
+                    <div class="gauge" style="background: conic-gradient(green 0% 90%, yellow 90% 95%, red 95% 100%); height: 10px; border-radius: 5px;"></div>
+                    <p>Low Risk</p>
+                    <button>Free Trial $ $ $</button>
+                </div>
+                <div class="bot-card">
+                    <h3>Solana Scalper</h3>
+                    <p>Not enough reviews</p>
+                    <p>PnL (6M): 70.64% ↑</p>
+                    <p>PnL (3M): 39.63% ↑</p>
+                    <div class="gauge" style="background: conic-gradient(green 0% 85%, yellow 85% 92%, red 92% 100%); height: 10px; border-radius: 5px;"></div>
+                    <p>Low Risk</p>
+                    <button>Free Trial $ $ $</button>
+                </div>
             </div>
         </div>
 
@@ -608,6 +765,7 @@
                 <div class="nav-tab active">Open</div>
                 <div class="nav-tab">Closed</div>
             </div>
+            <input type="text" placeholder="Search...">
             <table>
                 <thead>
                     <tr>
@@ -621,7 +779,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Empty for now -->
+                    <tr>
+                        <td>BTC/USDT</td>
+                        <td>Bitget</td>
+                        <td>$112,000</td>
+                        <td>2.5%</td>
+                        <td>5 min ago</td>
+                        <td><button>View</button></td>
+                        <td>Group 1</td>
+                    </tr>
+                    <!-- Add more sample rows -->
                 </tbody>
             </table>
         </div>
@@ -672,6 +839,17 @@
                 <label class="quiz-option"><input type="radio" name="q3" value="b"> b) Ilimitado</label>
                 <label class="quiz-option"><input type="radio" name="q3" value="c"> c) 100 millones</label>
             </div>
+            <div class="quiz-question">
+                <p>4. ¿Qué es el halving de Bitcoin?</p>
+                <label class="quiz-option"><input type="radio" name="q4" value="a"> a) Reducción a la mitad de la recompensa por minado</label>
+                <label class="quiz-option"><input type="radio" name="q4" value="b"> b) Duplicación del suministro</label>
+                <label class="quiz-option"><input type="radio" name="q4" value="c"> c) Cambio en el algoritmo</label>
+            </div>
+            <div class="quiz-question">
+                <p>5. ¿Bitcoin es descentralizado?</p>
+                <label class="quiz-option"><input type="radio" name="q5" value="a"> a) Sí</label>
+                <label class="quiz-option"><input type="radio" name="q5" value="b"> b) No</label>
+            </div>
             <button id="verify-quiz">Verificar y Revelar Enlace</button>
             <div id="telegram-link">
                 <p>¡Felicidades! Has completado las tareas y el cuestionario. Únete al grupo de Telegram para el curso: <a href="https://t.me/+k6JRjS5U9vY3Yjg0" target="_blank">Inicia en Crypto con Armonía</a></p>
@@ -703,34 +881,65 @@
             });
         });
 
-        // Fetch Crypto Prices
-        fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
-            .then(response => response.json())
-            .then(data => {
-                const updatePrice = (id, coin, symbol) => {
-                    const elem = document.getElementById(`${coin}-price`);
-                    const price = data[coin].usd.toFixed(2);
-                    const change = data[coin].usd_24h_change.toFixed(2);
-                    const direction = change > 0 ? '▲' : '▼';
-                    const className = change > 0 ? 'up' : 'down';
-                    elem.querySelector('.price').textContent = `$${price}`;
-                    elem.querySelector('.price-change').textContent = `${change}% ${direction}`;
-                    elem.querySelector('.price-change').className = `price-change ${className}`;
-                };
-                updatePrice('btc', 'bitcoin');
-                updatePrice('eth', 'ethereum');
-                updatePrice('ada', 'cardano');
-                updatePrice('not', 'notcoin');
-                updatePrice('doge', 'dogecoin');
-            });
+        // User Settings Dropdown
+        const userProfile = document.querySelector('.user-profile');
+        const settingsDropdown = document.querySelector('.settings-dropdown');
+
+        userProfile.addEventListener('click', () => {
+            settingsDropdown.style.display = settingsDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            themeToggle.textContent = document.body.classList.contains('dark') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
+
+        // Fetch Crypto Prices Function
+        function updateCryptoPrices() {
+            fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
+                .then(response => response.json())
+                .then(data => {
+                    const updatePrice = (id, coin) => {
+                        const elem = document.getElementById(`${coin}-price`);
+                        const price = data[coin].usd.toFixed(2);
+                        const change = data[coin].usd_24h_change.toFixed(2);
+                        const direction = change > 0 ? '▲' : '▼';
+                        const className = change > 0 ? 'up' : 'down';
+                        elem.querySelector('.price').textContent = `$${price}`;
+                        elem.querySelector('.price-change').textContent = `${change}% ${direction}`;
+                        elem.querySelector('.price-change').className = `price-change ${className}`;
+                    };
+                    updatePrice('btc', 'bitcoin');
+                    updatePrice('eth', 'ethereum');
+                    updatePrice('ada', 'cardano');
+                    updatePrice('not', 'notcoin');
+                    updatePrice('doge', 'dogecoin');
+                });
+        }
+
+        // Initial fetch and set interval for real-time updates every 30 seconds
+        updateCryptoPrices();
+        setInterval(updateCryptoPrices, 30000);
 
         // Charts
+        // Dashboard Overview (Line Chart example)
+        new Chart(document.getElementById('dashboard-overview-chart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{ label: 'Performance', data: [0, 10, 5, 15, 10, 20], borderColor: '#007bff' }]
+            },
+            options: { responsive: true }
+        });
+
         // Trades Allocation (Doughnut)
         new Chart(document.getElementById('trades-allocation-chart'), {
             type: 'doughnut',
             data: {
-                labels: ['Total'],
-                datasets: [{ data: [0], backgroundColor: ['#007bff'] }]
+                labels: ['BTC', 'ETH', 'Others'],
+                datasets: [{ data: [40, 30, 30], backgroundColor: ['#007bff', '#00bfff', '#ccc'] }]
             },
             options: { responsive: true }
         });
@@ -740,7 +949,7 @@
             type: 'bar',
             data: {
                 labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Trades', data: [0,0,0,0,0,0], backgroundColor: '#007bff' }]
+                datasets: [{ label: 'Trades', data: [5, 10, 15, 20, 25, 30], backgroundColor: '#007bff' }]
             },
             options: { responsive: true }
         });
@@ -750,7 +959,7 @@
             type: 'doughnut',
             data: {
                 labels: ['Bitget Futures', 'Bitget Spot'],
-                datasets: [{ data: [50, 50], backgroundColor: ['#007bff', '#00bfff'] }]
+                datasets: [{ data: [60, 40], backgroundColor: ['#007bff', '#00bfff'] }]
             },
             options: { responsive: true }
         });
@@ -760,7 +969,17 @@
             type: 'bar',
             data: {
                 labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Change', data: [0,0,0,0,0,0], backgroundColor: '#007bff' }]
+                datasets: [{ label: 'Change', data: [2, 5, -1, 10, 8, 15], backgroundColor: '#007bff' }]
+            },
+            options: { responsive: true }
+        });
+
+        // Portfolio Asset Chart (Line)
+        new Chart(document.getElementById('portfolio-asset-chart'), {
+            type: 'line',
+            data: {
+                labels: ['1h', '1d', '1w', '1m', '3m', '1y'],
+                datasets: [{ label: 'BTC/USDT', data: [110000, 112000, 115000, 120000, 118000, 125000], borderColor: '#007bff' }]
             },
             options: { responsive: true }
         });
@@ -775,7 +994,9 @@
             const q1 = document.querySelector('input[name="q1"]:checked')?.value === 'a';
             const q2 = document.querySelector('input[name="q2"]:checked')?.value === 'b';
             const q3 = document.querySelector('input[name="q3"]:checked')?.value === 'a';
-            if (allFollowed && q1 && q2 && q3) {
+            const q4 = document.querySelector('input[name="q4"]:checked')?.value === 'a';
+            const q5 = document.querySelector('input[name="q5"]:checked')?.value === 'a';
+            if (allFollowed && q1 && q2 && q3 && q4 && q5) {
                 telegramLink.style.display = 'block';
             } else {
                 alert('Por favor, completa todas las tareas y responde correctamente al cuestionario.');
