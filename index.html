@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Harmony Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* General Styles */
         body {
@@ -33,7 +34,7 @@
         }
 
         .sidebar:hover {
-            width: 200px;
+            width: 250px;
             background-color: #f0f0f0;
         }
 
@@ -42,17 +43,34 @@
             margin-bottom: 20px;
             cursor: pointer;
             color: #666;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
             transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar-icon .icon {
+            margin-right: 10px;
+        }
+
+        .sidebar-icon .label {
+            display: none;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .label {
+            display: inline;
         }
 
         .sidebar-icon.active {
             color: #007bff;
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .sidebar-icon:hover {
             color: #007bff;
-            transform: rotate(10deg);
+            transform: translateX(5px);
         }
 
         /* Topbar */
@@ -72,7 +90,7 @@
         }
 
         .sidebar:hover ~ .topbar {
-            left: 200px;
+            left: 250px;
         }
 
         .logo {
@@ -81,10 +99,6 @@
             color: #000;
             margin-right: 20px;
             transition: font-size 0.3s ease;
-        }
-
-        .sidebar:hover .logo {
-            font-size: 24px;
         }
 
         .nav-tabs {
@@ -110,13 +124,13 @@
         .nav-tab:hover {
             background-color: #0056b3;
             color: #fff;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .crypto-prices {
             display: flex;
             align-items: center;
-            animation: slideIn 5s infinite alternate;
+            animation: fadeIn 1s ease;
         }
 
         .crypto-price {
@@ -128,7 +142,7 @@
         }
 
         .crypto-price:hover {
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         .crypto-icon {
@@ -167,7 +181,7 @@
 
         .create-bot:hover {
             background-color: #0056b3;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .notifications {
@@ -177,7 +191,7 @@
         }
 
         .notifications:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .bell {
@@ -198,7 +212,7 @@
         }
 
         .notifications:hover .notification-count {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .user-profile {
@@ -212,7 +226,7 @@
         }
 
         .user-profile:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         /* Main Content */
@@ -227,7 +241,7 @@
         }
 
         .sidebar:hover ~ .main {
-            margin-left: 200px;
+            margin-left: 250px;
         }
 
         .upgrade-banner {
@@ -255,7 +269,7 @@
         /* Section Styles */
         .section {
             display: none;
-            animation: slideInSection 0.5s ease;
+            animation: fadeInSection 0.5s ease;
         }
 
         .section.active {
@@ -270,72 +284,50 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .section.active {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .section {
-            transform: translateY(20px);
-            opacity: 0;
-        }
-
-        /* Dropdown Menus */
-        .dropdown {
+        /* Charts */
+        .chart-container {
             position: relative;
-            display: inline-block;
+            height: 200px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
-        .dropdown-content {
-            display: none;
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(#007bff 0% 50%, #ccc 50% 100%);
+            margin: 0 auto;
+        }
+
+        .gauge {
+            width: 100px;
+            height: 50px;
+            background: conic-gradient(green 0% 70%, yellow 70% 85%, red 85% 100%);
+            border-radius: 50px 50px 0 0;
+            position: relative;
+            transform: rotate(180deg);
+        }
+
+        .gauge:before {
+            content: '';
             position: absolute;
-            background-color: #fff;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: black;
+            border-radius: 50%;
         }
 
         /* Course Section */
-        .social-list {
-            list-style: none;
-            padding: 0;
-            transition: transform 0.3s ease;
+        .quiz-question {
+            margin-bottom: 15px;
         }
 
-        .social-item {
-            margin-bottom: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .social-item:hover {
-            transform: translateX(10px);
-        }
-
-        .social-link {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .social-link:hover {
-            color: #0056b3;
+        .quiz-option {
+            display: block;
         }
 
         #telegram-link {
@@ -347,44 +339,26 @@
             animation: bounceIn 0.5s ease;
         }
 
-        /* Placeholder for charts and graphs */
-        .chart-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            animation: pulse 3s infinite;
-        }
-
         /* Animations */
-        @keyframes slideIn {
-            from { transform: translateX(-100px); }
-            to { transform: translateX(0); }
-        }
-
-        @keyframes slideInSection {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
+        @keyframes fadeInSection {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
 
         @keyframes bounceIn {
             0% { transform: scale(0); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
     </style>
@@ -392,15 +366,15 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-icon active" data-section="dashboard">🏠</div> <!-- Dashboard -->
-        <div class="sidebar-icon" data-section="trades">📊</div> <!-- Trades -->
-        <div class="sidebar-icon" data-section="portfolio">💼</div> <!-- Portfolio -->
-        <div class="sidebar-icon" data-section="bots-signals">🤖</div> <!-- My Signals Bots -->
-        <div class="sidebar-icon" data-section="bots-tradingview">📈</div> <!-- My TradingView Bots -->
-        <div class="sidebar-icon" data-section="trading-terminal">🖥️</div> <!-- Trading Terminal -->
-        <div class="sidebar-icon" data-section="marketplace">🛒</div> <!-- Marketplace -->
-        <div class="sidebar-icon" data-section="signals">📡</div> <!-- Signals -->
-        <div class="sidebar-icon" data-section="course">📚</div> <!-- Curso BTC Esta -->
+        <div class="sidebar-icon active" data-section="dashboard"><span class="icon">🏠</span><span class="label">Dashboard</span></div>
+        <div class="sidebar-icon" data-section="trades"><span class="icon">📊</span><span class="label">Trades</span></div>
+        <div class="sidebar-icon" data-section="portfolio"><span class="icon">💼</span><span class="label">Portfolio</span></div>
+        <div class="sidebar-icon" data-section="bots-signals"><span class="icon">🤖</span><span class="label">My Signals Bots</span></div>
+        <div class="sidebar-icon" data-section="bots-tradingview"><span class="icon">📈</span><span class="label">My TradingView Bots</span></div>
+        <div class="sidebar-icon" data-section="trading-terminal"><span class="icon">🖥️</span><span class="label">Trading Terminal</span></div>
+        <div class="sidebar-icon" data-section="marketplace"><span class="icon">🛒</span><span class="label">Marketplace</span></div>
+        <div class="sidebar-icon" data-section="signals"><span class="icon">📡</span><span class="label">Signals</span></div>
+        <div class="sidebar-icon" data-section="course"><span class="icon">📚</span><span class="label">Curso BTC Esta</span></div>
     </div>
 
     <!-- Topbar -->
@@ -411,25 +385,25 @@
             <div class="nav-tab">Demo</div>
         </div>
         <div class="crypto-prices">
-            <div class="crypto-price">
+            <div class="crypto-price" id="btc-price">
                 <div class="crypto-icon">B</div>
-                BTC/USDT $112.613.9 <span class="price-change up">2.63% ▲</span>
+                BTC/USDT <span class="price">$--</span> <span class="price-change">--% --</span>
             </div>
-            <div class="crypto-price">
+            <div class="crypto-price" id="eth-price">
                 <div class="crypto-icon">E</div>
-                ETH/USDT $442.46 <span class="price-change up">2.08% ▲</span>
+                ETH/USDT <span class="price">$--</span> <span class="price-change">--% --</span>
             </div>
-            <div class="crypto-price">
+            <div class="crypto-price" id="ada-price">
                 <div class="crypto-icon">A</div>
-                ADA/USDT $0.839 <span class="price-change up">3.66% ▲</span>
+                ADA/USDT <span class="price">$--</span> <span class="price-change">--% --</span>
             </div>
-            <div class="crypto-price">
+            <div class="crypto-price" id="not-price">
                 <div class="crypto-icon">N</div>
-                NOT/USDT $0.001916 <span class="price-change up">5.56% ▲</span>
+                NOT/USDT <span class="price">$--</span> <span class="price-change">--% --</span>
             </div>
-            <div class="crypto-price">
+            <div class="crypto-price" id="doge-price">
                 <div class="crypto-icon">D</div>
-                DOGE/USDT $0.21935 <span class="price-change up">2.93% ▲</span>
+                DOGE/USDT <span class="price">$--</span> <span class="price-change">--% --</span>
             </div>
         </div>
         <div class="create-bot">+ Create Bot</div>
@@ -450,8 +424,29 @@
         <div id="dashboard" class="section dashboard-content active">
             <h2>Dashboard</h2>
             <p>Open Trades: 0 hot trades (out of 0)</p>
-            <div class="chart-placeholder">No open trades</div>
-            <button class="create-bot">Create Trade</button>
+            <div style="text-align: center; margin: 20px 0;">
+                <span style="font-size: 48px; color: #ccc;">↓</span>
+                <p>No open trades</p>
+                <button class="create-bot">Create Trade</button>
+            </div>
+            <div style="display: flex; justify-content: space-around;">
+                <div class="stat-card">
+                    <h3>Open Trades</h3>
+                    <p>0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Amount in Open Trades</h3>
+                    <p>0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>PnL in Open Trades</h3>
+                    <p>0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Potential Profit</h3>
+                    <p>0</p>
+                </div>
+            </div>
         </div>
 
         <!-- Trades Section -->
@@ -461,15 +456,43 @@
                 <div class="nav-tab active">Open</div>
                 <div class="nav-tab">Closed</div>
             </div>
-            <div class="chart-placeholder">Trades Amount Allocation: $0 Total</div>
-            <div class="chart-placeholder">Number of Trades: No data collected</div>
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    <h3>Trades Amount Allocation</h3>
+                    <div class="chart-container">
+                        <canvas id="trades-allocation-chart"></canvas>
+                    </div>
+                    <p>Total $0</p>
+                </div>
+                <div style="flex: 1;">
+                    <h3>Number of Trades</h3>
+                    <div class="chart-container">
+                        <canvas id="trades-number-chart"></canvas>
+                    </div>
+                    <p>No data collected</p>
+                </div>
+            </div>
         </div>
 
         <!-- Portfolio Section -->
         <div id="portfolio" class="section portfolio-content">
             <h2>Portfolio</h2>
-            <div class="chart-placeholder">Accounts Allocation: $95.33 Total</div>
-            <div class="chart-placeholder">Portfolio Change: No data collected</div>
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    <h3>Accounts Allocation</h3>
+                    <div class="chart-container">
+                        <canvas id="portfolio-allocation-chart"></canvas>
+                    </div>
+                    <p>Total $95.33</p>
+                </div>
+                <div style="flex: 1;">
+                    <h3>Portfolio Change</h3>
+                    <div class="chart-container">
+                        <canvas id="portfolio-change-chart"></canvas>
+                    </div>
+                    <p>No data collected</p>
+                </div>
+            </div>
             <ul>
                 <li>My Bitget-Futures-8D21</li>
                 <li>My Bitget-Spot-8D21</li>
@@ -479,27 +502,75 @@
         <!-- My Signals Bots Section -->
         <div id="bots-signals" class="section bots-signals-content">
             <h2>My Signals Bots</h2>
-            <p>Revolutionizing auto trading with advanced strategies...</p>
-            <button>Watch Video</button>
-            <button>Learn More</button>
+            <div style="background: #e6f0ff; padding: 20px; border-radius: 10px;">
+                <h3>Welcome to Signals Bots!</h3>
+                <p>Revolutionizing auto trading with advanced strategies, full flexibility, and a user-friendly interface. The Signals Bots are suitable for both novice and advanced traders. These smart bots redefine trading automation, offering hassle-free following of expert trades without requiring extensive time or effort.</p>
+                <button>Watch Video</button>
+                <button>Learn More</button>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div class="info-card">
+                    <h4>What is the Cornix Signals Bot?</h4>
+                    <p>In the dynamic world of cryptocurrency trading, the Cornix Signals Bot emerges as a sophisticated and user-friendly...</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="info-card">
+                    <h4>How to Use Cornix Signals Bot: A Step-by-Step Guide</h4>
+                    <p>Easily create your Signals Bot with only 2 steps. The Signals Bot automatic...</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="info-card">
+                    <h4>Signals Bot Advanced Settings</h4>
+                    <p>The advanced settings are made for advanced users and allow full control of the signals bot config...</p>
+                    <a href="#">Read More</a>
+                </div>
+            </div>
         </div>
 
         <!-- My TradingView Bots Section -->
         <div id="bots-tradingview" class="section bots-tradingview-content">
             <h2>My TradingView Bots</h2>
-            <p>Combine the power of TradingView with Cornix's automation...</p>
-            <button>Watch Video</button>
-            <button>Learn More</button>
+            <div style="background: #e6f0ff; padding: 20px; border-radius: 10px;">
+                <h3>Welcome to TradingView Bots!</h3>
+                <p>Combine the power of TradingView with Cornix's advanced trading automation. Our TradingView Bots let you use your own alerts and Pine-scripts or copy those you trust to ensure you never miss an opportunity. Trade on your terms with an easy and enjoyable blend of world-class indicators and cutting-edge automation.</p>
+                <button>Watch Video</button>
+                <button>Learn More</button>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div class="info-card">
+                    <h4>What is the Cornix TradingView Bot?</h4>
+                    <p>The Cornix Trading View Bot is an advanced automation tool that allows you to execute trades directly...</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="info-card">
+                    <h4>Create a TradingView Bot</h4>
+                    <p>TradingView Bots will create trades based on a pre-configured strategy when triggered by pre-defined...</p>
+                    <a href="#">Read More</a>
+                </div>
+                <div class="info-card">
+                    <h4>Create TradingView Alerts and Connect them to your Bot</h4>
+                    <p>Currently, TradingView integration with Cornix is only possible by using the Webhook URL method...</p>
+                    <a href="#">Read More</a>
+                </div>
+            </div>
         </div>
 
         <!-- Trading Terminal Section -->
         <div id="trading-terminal" class="section trading-terminal-content">
             <h2>Trading Terminal</h2>
             <form>
-                <label>Account: My-Bitget-Spot-8D21</label>
-                <label>Symbol: BTC/USDT</label>
+                <label>Account</label>
+                <select>
+                    <option>My-Bitget-Spot-8D21</option>
+                </select>
+                <label>Symbol</label>
+                <input type="text" value="BTC/USDT">
                 <label>New Amount (USDT)</label>
                 <input type="text">
+                <label>Available Amount</label>
+                <p>27.269 USDT (27.26 USD)</p>
+                <label>Trade Amount</label>
+                <input type="text" value="5.03 USDT (5.03 USD)">
                 <button>Create Trade</button>
             </form>
         </div>
@@ -507,10 +578,27 @@
         <!-- Marketplace Section -->
         <div id="marketplace" class="section marketplace-content">
             <h2>Marketplace</h2>
-            <ul>
-                <li>The MARTINGALE Bot - PnL (6M): 109.69% ↑</li>
-                <li>Crypto Dreams - PnL (6M): 95.56% ↑</li>
-            </ul>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div class="bot-card">
+                    <h3>The MARTINGALE Bot</h3>
+                    <p>★★★★☆ (4.2)</p>
+                    <p>PnL (6M): 109.69% ↑</p>
+                    <p>PnL (3M): 67.68% ↑</p>
+                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%);"></div>
+                    <p>Medium Risk</p>
+                    <button>Free Trial $ $ $</button>
+                </div>
+                <div class="bot-card">
+                    <h3>Crypto Dreams</h3>
+                    <p>Not enough reviews</p>
+                    <p>PnL (6M): 95.56% ↑</p>
+                    <p>PnL (3M): 42.49% ↑</p>
+                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%);"></div>
+                    <p>Low Risk</p>
+                    <button>Free Trial $ $ $</button>
+                </div>
+                <!-- Add more bots -->
+            </div>
         </div>
 
         <!-- Signals Section -->
@@ -533,6 +621,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Empty for now -->
                 </tbody>
             </table>
         </div>
@@ -540,7 +629,8 @@
         <!-- Curso BTC Esta Section -->
         <div id="course" class="section course-content">
             <h2>Curso BTC Esta</h2>
-            <p>Para acceder al curso, sigue todos los perfiles en redes sociales a continuación y marca las casillas una vez que lo hayas hecho. Una vez completadas todas las tareas, se revelará el enlace de Telegram.</p>
+            <p>Para acceder al curso, completa todas las tareas sociales y responde correctamente al cuestionario sobre BTC. Una vez completado, se revelará el enlace de Telegram.</p>
+            <h3>Tareas Sociales</h3>
             <ul class="social-list">
                 <li class="social-item">
                     <input type="checkbox" class="follow-check" data-social="x">
@@ -558,9 +648,33 @@
                     <input type="checkbox" class="follow-check" data-social="tiktok">
                     Sigue en TikTok: <a href="https://www.tiktok.com/@financial.harmony0" target="_blank" class="social-link">financial.harmony0</a>
                 </li>
+                <li class="social-item">
+                    <input type="checkbox" class="follow-check" data-social="extra">
+                    Suscríbete al newsletter: <a href="#" target="_blank" class="social-link">Newsletter Link</a>
+                </li>
             </ul>
+            <h3>Cuestionario BTC</h3>
+            <div class="quiz-question">
+                <p>1. ¿Qué significa BTC?</p>
+                <label class="quiz-option"><input type="radio" name="q1" value="a"> a) Bitcoin</label>
+                <label class="quiz-option"><input type="radio" name="q1" value="b"> b) Bytecoin</label>
+                <label class="quiz-option"><input type="radio" name="q1" value="c"> c) Bitcash</label>
+            </div>
+            <div class="quiz-question">
+                <p>2. ¿Quién creó Bitcoin?</p>
+                <label class="quiz-option"><input type="radio" name="q2" value="a"> a) Elon Musk</label>
+                <label class="quiz-option"><input type="radio" name="q2" value="b"> b) Satoshi Nakamoto</label>
+                <label class="quiz-option"><input type="radio" name="q2" value="c"> c) Vitalik Buterin</label>
+            </div>
+            <div class="quiz-question">
+                <p>3. ¿Cuál es el suministro máximo de BTC?</p>
+                <label class="quiz-option"><input type="radio" name="q3" value="a"> a) 21 millones</label>
+                <label class="quiz-option"><input type="radio" name="q3" value="b"> b) Ilimitado</label>
+                <label class="quiz-option"><input type="radio" name="q3" value="c"> c) 100 millones</label>
+            </div>
+            <button id="verify-quiz">Verificar y Revelar Enlace</button>
             <div id="telegram-link">
-                <p>¡Felicidades! Has completado las tareas. Únete al grupo de Telegram para el curso: <a href="https://t.me/+k6JRjS5U9vY3Yjg0" target="_blank">Inicia en Crypto con Armonía</a></p>
+                <p>¡Felicidades! Has completado las tareas y el cuestionario. Únete al grupo de Telegram para el curso: <a href="https://t.me/+k6JRjS5U9vY3Yjg0" target="_blank">Inicia en Crypto con Armonía</a></p>
             </div>
         </div>
     </div>
@@ -580,7 +694,7 @@
             });
         });
 
-        // Nav Tabs (example for Trades, etc.)
+        // Nav Tabs
         const navTabs = document.querySelectorAll('.nav-tab');
         navTabs.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -589,19 +703,83 @@
             });
         });
 
-        // Course Follow Checks
+        // Fetch Crypto Prices
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
+            .then(response => response.json())
+            .then(data => {
+                const updatePrice = (id, coin, symbol) => {
+                    const elem = document.getElementById(`${coin}-price`);
+                    const price = data[coin].usd.toFixed(2);
+                    const change = data[coin].usd_24h_change.toFixed(2);
+                    const direction = change > 0 ? '▲' : '▼';
+                    const className = change > 0 ? 'up' : 'down';
+                    elem.querySelector('.price').textContent = `$${price}`;
+                    elem.querySelector('.price-change').textContent = `${change}% ${direction}`;
+                    elem.querySelector('.price-change').className = `price-change ${className}`;
+                };
+                updatePrice('btc', 'bitcoin');
+                updatePrice('eth', 'ethereum');
+                updatePrice('ada', 'cardano');
+                updatePrice('not', 'notcoin');
+                updatePrice('doge', 'dogecoin');
+            });
+
+        // Charts
+        // Trades Allocation (Doughnut)
+        new Chart(document.getElementById('trades-allocation-chart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Total'],
+                datasets: [{ data: [0], backgroundColor: ['#007bff'] }]
+            },
+            options: { responsive: true }
+        });
+
+        // Trades Number (Bar)
+        new Chart(document.getElementById('trades-number-chart'), {
+            type: 'bar',
+            data: {
+                labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
+                datasets: [{ label: 'Trades', data: [0,0,0,0,0,0], backgroundColor: '#007bff' }]
+            },
+            options: { responsive: true }
+        });
+
+        // Portfolio Allocation (Doughnut)
+        new Chart(document.getElementById('portfolio-allocation-chart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Bitget Futures', 'Bitget Spot'],
+                datasets: [{ data: [50, 50], backgroundColor: ['#007bff', '#00bfff'] }]
+            },
+            options: { responsive: true }
+        });
+
+        // Portfolio Change (Bar)
+        new Chart(document.getElementById('portfolio-change-chart'), {
+            type: 'bar',
+            data: {
+                labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
+                datasets: [{ label: 'Change', data: [0,0,0,0,0,0], backgroundColor: '#007bff' }]
+            },
+            options: { responsive: true }
+        });
+
+        // Course Verification
         const followChecks = document.querySelectorAll('.follow-check');
+        const verifyButton = document.getElementById('verify-quiz');
         const telegramLink = document.getElementById('telegram-link');
 
-        followChecks.forEach(check => {
-            check.addEventListener('change', () => {
-                const allChecked = Array.from(followChecks).every(c => c.checked);
-                if (allChecked) {
-                    telegramLink.style.display = 'block';
-                } else {
-                    telegramLink.style.display = 'none';
-                }
-            });
+        verifyButton.addEventListener('click', () => {
+            const allFollowed = Array.from(followChecks).every(c => c.checked);
+            const q1 = document.querySelector('input[name="q1"]:checked')?.value === 'a';
+            const q2 = document.querySelector('input[name="q2"]:checked')?.value === 'b';
+            const q3 = document.querySelector('input[name="q3"]:checked')?.value === 'a';
+            if (allFollowed && q1 && q2 && q3) {
+                telegramLink.style.display = 'block';
+            } else {
+                alert('Por favor, completa todas las tareas y responde correctamente al cuestionario.');
+            }
         });
     </script>
 </body>
