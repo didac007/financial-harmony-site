@@ -26,7 +26,6 @@
       --accent: #f1f5f9;
       --radius: 16px;
       --shadow: 0 2px 8px #0001;
-      --card: #fff;
       --transition: 0.2s;
     }
     html, body { height: 100%; margin: 0; padding: 0; }
@@ -386,6 +385,10 @@
     .bot-guide { margin-top: 20px;}
     .bot-guide h3 { font-size: 1.2em; margin-bottom: 10px;}
     .bot-guide ul { list-style-type: disc; padding-left: 20px;}
+    /* Bot List */
+    .bot-list { list-style: none; padding: 0; margin: 0;}
+    .bot-list li { margin-bottom: 12px; display: flex; align-items: center; cursor: pointer;}
+    .bot-list li:hover { background: var(--primary-light); border-radius: var(--radius); padding: 8px;}
   </style>
 </head>
 <body>
@@ -448,8 +451,6 @@
         <div class="stat-card"><h3>Potential Profit</h3><p>0</p></div>
       </div>
       <div class="chart-container"><canvas id="dashboard-overview-chart"></canvas></div>
-      <h3>Accounts</h3>
-      <p>See all →</p>
     </section>
     <!-- Trades -->
     <section id="trades" class="section">
