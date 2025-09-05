@@ -10,6 +10,8 @@
   <!-- RemixIcon for pro icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- TradingView Widget -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
   <style>
     :root {
       --primary: #2563eb;
@@ -146,7 +148,8 @@
     .topbar .crypto-prices {
       display: flex; gap: 16px; align-items: center; font-size: 1rem; margin-right: 16px;
     }
-    .crypto-price { display: flex; align-items: center; gap:4px;}
+    .crypto-price { display: flex; align-items: center; gap:4px; cursor: pointer;}
+    .crypto-price:hover { text-decoration: underline;}
     .crypto-price .crypto-icon {
       width: 22px; height: 22px; border-radius: 50%; background: orange;
       display: flex; align-items: center; justify-content: center;
@@ -343,15 +346,47 @@
     .pay-modal .payment-methods i { margin-right: 6px; font-size: 1.2em;}
     .pay-modal .checkbox-row { margin-bottom: 18px; font-size: .95em; color: var(--muted);}
     .pay-modal .checkbox-row input[type="checkbox"] { transform: scale(1.2); margin-right: 8px;}
-    .pay-modal .promo-link { background: none; border: none; color: var(--primary); cursor: pointer; font-weight: 600; margin-bottom: 16px; display: block;}
+    .pay-modal .promo-link { background: none; border: none; border: none; color: var(--primary); cursor: pointer; font-weight: 600; margin-bottom: 16px; display: block;}
     .pay-modal .pay-btn { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 12px; font-weight: 600; cursor: pointer; transition: background var(--transition);}
     .pay-modal .pay-btn:hover { background: var(--primary-hover);}
+    /* Chart Modal */
+    .chart-modal-bg {
+      display: none; position: fixed; z-index: 10000; left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); align-items: center; justify-content: center;
+    }
+    .chart-modal-bg.active { display: flex;}
+    .chart-modal {
+      background: #fff; border-radius: 20px; box-shadow: 0 4px 38px #0003;
+      width: 80vw; height: 80vh; max-width: 1200px; padding: 20px;
+      position: relative;
+    }
+    .chart-modal .close-btn { position: absolute; top: 12px; right: 12px; font-size: 1.8em; cursor: pointer; color: #aaa; background: none; border: none;}
+    .chart-modal .tradingview-widget-container { height: 100%;}
+    /* Bot Creation Modal */
+    .bot-modal-bg {
+      display: none; position: fixed; z-index: 10000; left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); align-items: center; justify-content: center;
+    }
+    .bot-modal-bg.active { display: flex;}
+    .bot-modal {
+      background: #fff; border-radius: 20px; box-shadow: 0 4px 38px #0003;
+      width: 500px; max-width: 95vw; padding: 28px;
+      animation: fadeInSection .3s; position: relative;
+    }
+    .bot-modal .close-btn { position: absolute; top: 12px; right: 12px; font-size: 1.8em; cursor: pointer; color: #aaa; background: none; border: none;}
+    .bot-modal h2 { font-size: 1.5em; margin-bottom: 16px;}
+    .bot-modal label { display: block; margin-bottom: 8px; font-weight: 600;}
+    .bot-modal input, .bot-modal select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;}
+    .bot-modal .strategy-options { margin-bottom: 20px;}
+    .bot-modal .strategy-option { margin-bottom: 10px;}
+    .bot-modal button[type="submit"] { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 12px; font-weight: 600; cursor: pointer; transition: background var(--transition);}
+    .bot-modal button[type="submit"]:hover { background: var(--primary-hover);}
   </style>
 </head>
 <body>
   <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
-    <div class="logo"><img src="https://cdn.jsdelivr.net/gh/didac007/financial-harmony-site@main/logo-fh.png" alt="Financial Harmony logo"></div>
+    <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony logo"></div>
     <button class="sidebar-icon active" data-section="dashboard" title="Dashboard"><i class="ri-home-5-line"></i> <span class="label">Dashboard</span></button>
     <button class="sidebar-icon" data-section="trades" title="Trades"><i class="ri-exchange-dollar-line"></i> <span class="label">Trades</span></button>
     <button class="sidebar-icon" data-section="portfolio" title="Portfolio"><i class="ri-briefcase-4-line"></i> <span class="label">Portfolio</span></button>
@@ -367,7 +402,7 @@
   <!-- Topbar -->
   <div class="topbar" id="topbar">
     <div class="logo-txt">
-      <img src="https://cdn.jsdelivr.net/gh/didac007/financial-harmony-site@main/logo-fh.png" alt="logo" />
+      <img src="financial_harmony_logo.png" alt="logo" />
       <span>Financial Harmony</span>
     </div>
     <div class="nav-tabs">
@@ -375,13 +410,13 @@
       <button class="nav-tab">Demo</button>
     </div>
     <div class="crypto-prices">
-      <div class="crypto-price" id="btc-price"><div class="crypto-icon"><i class="ri-bit-coin-line"></i></div>BTC/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-      <div class="crypto-price" id="eth-price"><div class="crypto-icon" style="background:#888;"><i class="ri-ethereum-line"></i></div>ETH/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-      <div class="crypto-price" id="ada-price"><div class="crypto-icon" style="background:#2e9fff;">A</div>ADA/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-      <div class="crypto-price" id="not-price"><div class="crypto-icon" style="background:#666;">N</div>NOT/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-      <div class="crypto-price" id="doge-price"><div class="crypto-icon" style="background:#e6b800;"><i class="ri-doge-line"></i></div>DOGE/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" data-symbol="BTCUSDT"><div class="crypto-icon"><i class="ri-bit-coin-line"></i></div>BTC/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" data-symbol="ETHUSDT"><div class="crypto-icon" style="background:#888;"><i class="ri-ethereum-line"></i></div>ETH/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" data-symbol="ADAUSDT"><div class="crypto-icon" style="background:#2e9fff;">A</div>ADA/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" data-symbol="NOTUSDT"><div class="crypto-icon" style="background:#666;">N</div>NOT/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" data-symbol="DOGEUSDT"><div class="crypto-icon" style="background:#e6b800;"><i class="ri-doge-line"></i></div>DOGE/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
     </div>
-    <button class="create-bot">+ Create Bot</button>
+    <button class="create-bot" id="create-bot-btn">+ Create Bot</button>
     <div class="notifications">
       <span class="bell"><i class="ri-notification-3-line"></i></span>
       <span class="notification-count">25</span>
@@ -436,6 +471,9 @@
         <tr><td>001</td><td>BTC/USDT</td><td>$100</td><td>Open</td></tr>
         </tbody>
       </table>
+      <div class="tradingview-widget-container" style="height: 500px; margin-top: 20px;">
+        <div id="trades-chart"></div>
+      </div>
     </section>
     <!-- Portfolio -->
     <section id="portfolio" class="section">
@@ -491,7 +529,9 @@
         <input type="text" value="5.03 USDT (5.03 USD)">
         <button type="submit">Create Trade</button>
       </form>
-      <div class="chart-container"><canvas id="terminal-chart"></canvas></div>
+      <div class="tradingview-widget-container" style="height: 500px; margin-top: 20px;">
+        <div id="terminal-chart-widget"></div>
+      </div>
     </section>
     <!-- Signals -->
     <section id="signals" class="section">
@@ -742,6 +782,43 @@
       </div>
     </div>
   </div>
+  <!-- Chart Modal -->
+  <div class="chart-modal-bg" id="chart-modal-bg">
+    <div class="chart-modal">
+      <button class="close-btn" id="close-chart-modal">&times;</button>
+      <div class="tradingview-widget-container">
+        <div id="coin-chart-widget"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Bot Creation Modal -->
+  <div class="bot-modal-bg" id="bot-modal-bg">
+    <div class="bot-modal">
+      <button class="close-btn" id="close-bot-modal">&times;</button>
+      <h2>Create Bot</h2>
+      <form id="bot-form">
+        <label for="bot-type">Bot Type</label>
+        <select id="bot-type">
+          <option value="signals">Signals Bot</option>
+          <option value="tradingview">TradingView Bot</option>
+          <option value="dca">DCA Bot</option>
+          <option value="grid">Grid Bot</option>
+        </select>
+        <label>Strategy</label>
+        <div class="strategy-options">
+          <label class="strategy-option"><input type="radio" name="strategy" value="martingale"> Martingale (Basic: Double bet after loss)</label>
+          <label class="strategy-option"><input type="radio" name="strategy" value="dca"> DCA (Dollar Cost Averaging: Buy at intervals)</label>
+          <label class="strategy-option"><input type="radio" name="strategy" value="grid"> Grid (Buy low, sell high in range)</label>
+          <label class="strategy-option"><input type="radio" name="strategy" value="custom"> Custom</label>
+        </div>
+        <label for="symbol">Symbol</label>
+        <input type="text" id="symbol" value="BTC/USDT">
+        <label for="amount">Amount (USDT)</label>
+        <input type="text" id="amount" value="100">
+        <button type="submit">Create Bot</button>
+      </form>
+    </div>
+  </div>
   <script>
     // SPA Navigation
     document.querySelectorAll('.sidebar-icon').forEach(btn => {
@@ -838,11 +915,96 @@
         datasets: [{ label: 'BTC/USDT', data: [110540, 112000, 113000, 113200, 113000, 110480], borderColor: '#2563eb', fill: false }]},
       options: { responsive: true, plugins:{legend:{display:false}} }
     });
-    new Chart(document.getElementById('terminal-chart'), {
-      type: 'line',
-      data: { labels: ['6','10','18','22','26','Sep'],
-        datasets: [{ label: 'BTC/USDT', data: [108000, 111000, 120000, 118000, 115000, 110480], borderColor: '#2563eb', fill: false }]},
-      options: { responsive: true, plugins:{legend:{display:false}} }
+
+    // TradingView Widgets
+    new TradingView.widget({
+      "container_id": "trades-chart",
+      "width": "100%",
+      "height": "500",
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "es",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "studies": ["MA", "RSI"],
+      "show_popup_button": true,
+      "popup_width": "1000",
+      "popup_height": "650"
+    });
+
+    new TradingView.widget({
+      "container_id": "terminal-chart-widget",
+      "width": "100%",
+      "height": "500",
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "es",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "studies": ["MA", "RSI"],
+      "show_popup_button": true,
+      "popup_width": "1000",
+      "popup_height": "650"
+    });
+
+    // Coin Chart Modal
+    let currentSymbol = 'BTCUSDT';
+    document.querySelectorAll('.crypto-price').forEach(price => {
+      price.addEventListener('click', function(){
+        currentSymbol = price.dataset.symbol;
+        document.getElementById('chart-modal-bg').classList.add('active');
+        loadCoinChart(currentSymbol);
+      });
+    });
+    function loadCoinChart(symbol) {
+      new TradingView.widget({
+        "container_id": "coin-chart-widget",
+        "width": "100%",
+        "height": "100%",
+        "symbol": `BINANCE:${symbol}`,
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "light",
+        "style": "1",
+        "locale": "es",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "studies": ["MA", "RSI"],
+        "show_popup_button": true,
+        "popup_width": "1000",
+        "popup_height": "650"
+      });
+    }
+    document.getElementById('close-chart-modal').onclick = () => {
+      document.getElementById('chart-modal-bg').classList.remove('active');
+    };
+    document.getElementById('chart-modal-bg').onclick = (e) => {
+      if(e.target===document.getElementById('chart-modal-bg')) document.getElementById('chart-modal-bg').classList.remove('active');
+    };
+
+    // Bot Creation Modal
+    document.getElementById('create-bot-btn').onclick = () => {
+      document.getElementById('bot-modal-bg').classList.add('active');
+    };
+    document.getElementById('close-bot-modal').onclick = () => {
+      document.getElementById('bot-modal-bg').classList.remove('active');
+    };
+    document.getElementById('bot-modal-bg').onclick = (e) => {
+      if(e.target===document.getElementById('bot-modal-bg')) document.getElementById('bot-modal-bg').classList.remove('active');
+    };
+    document.getElementById('bot-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Bot created with selected strategy!');
+      document.getElementById('bot-modal-bg').classList.remove('active');
     });
 
     // Billing Modal Logic
