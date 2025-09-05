@@ -6,28 +6,51 @@
     <title>Financial Harmony Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* General Styles */
+        /* General Styles - Modular for easy updates */
+        :root {
+            --bg-color: #e6f0ff;
+            --text-color: #333;
+            --sidebar-bg: #fff;
+            --sidebar-border: #e0e0e0;
+            --topbar-bg: #fff;
+            --topbar-border: #e0e0e0;
+            --active-color: #007bff;
+            --hover-color: #0056b3;
+            --upgrade-bg: #d9eaff;
+            --card-bg: #fff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        body.dark {
+            --bg-color: #1a1a1a;
+            --text-color: #ddd;
+            --sidebar-bg: #333;
+            --sidebar-border: #444;
+            --topbar-bg: #333;
+            --topbar-border: #444;
+            --active-color: #4da6ff;
+            --hover-color: #3385ff;
+            --upgrade-bg: #2a2a2a;
+            --card-bg: #333;
+            --shadow: 0 2px 10px rgba(255,255,255,0.1);
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #e6f0ff; /* Changed background color to light blue inspired by logo */
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             height: 100vh;
             overflow: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        body.dark {
-            background-color: #1a1a1a;
-            color: #ddd;
-        }
-
-        /* Sidebar */
+        /* Sidebar - Expandable with labels */
         .sidebar {
             width: 60px;
-            background-color: #fff;
-            border-right: 1px solid #e0e0e0;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
             padding: 20px 0;
             display: flex;
             flex-direction: column;
@@ -38,18 +61,9 @@
             transition: width 0.3s ease, background-color 0.3s ease;
         }
 
-        body.dark .sidebar {
-            background-color: #333;
-            border-right: 1px solid #444;
-        }
-
         .sidebar:hover {
             width: 250px;
-            background-color: #f0f0f0;
-        }
-
-        body.dark .sidebar:hover {
-            background-color: #444;
+            background-color: var(--sidebar-bg); /* Update for hover effect if needed */
         }
 
         .sidebar-icon {
@@ -82,38 +96,29 @@
         }
 
         .sidebar-icon.active {
-            color: #007bff;
+            color: var(--active-color);
             transform: scale(1.1);
         }
 
         .sidebar-icon:hover {
-            color: #007bff;
+            color: var(--active-color);
             transform: translateX(5px);
         }
 
-        body.dark .sidebar-icon:hover {
-            color: #4da6ff;
-        }
-
-        /* Topbar */
+        /* Topbar - With logo and real-time prices */
         .topbar {
             position: fixed;
             top: 0;
             left: 60px;
             right: 0;
             height: 60px;
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
+            background-color: var(--topbar-bg);
+            border-bottom: 1px solid var(--topbar-border);
             display: flex;
             align-items: center;
             padding: 0 20px;
             z-index: 9;
             transition: left 0.3s ease, background-color 0.3s ease, border-bottom 0.3s ease;
-        }
-
-        body.dark .topbar {
-            background-color: #333;
-            border-bottom: 1px solid #444;
         }
 
         .sidebar:hover ~ .topbar {
@@ -132,7 +137,6 @@
         .nav-tabs {
             display: flex;
             margin-right: auto;
-            transition: transform 0.3s ease;
         }
 
         .nav-tab {
@@ -144,23 +148,19 @@
         }
 
         body.dark .nav-tab {
-            color: #ddd;
+            color: var(--text-color);
         }
 
         .nav-tab.active {
-            background-color: #007bff;
+            background-color: var(--active-color);
             color: #fff;
             transform: translateY(-2px);
         }
 
         .nav-tab:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
             color: #fff;
             transform: scale(1.05);
-        }
-
-        body.dark .nav-tab:hover {
-            background-color: #004080;
         }
 
         .crypto-prices {
@@ -206,7 +206,7 @@
         }
 
         .create-bot {
-            background-color: #007bff;
+            background-color: var(--active-color);
             color: #fff;
             padding: 8px 15px;
             border-radius: 5px;
@@ -216,16 +216,8 @@
         }
 
         .create-bot:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
             transform: scale(1.05);
-        }
-
-        body.dark .create-bot {
-            background-color: #4da6ff;
-        }
-
-        body.dark .create-bot:hover {
-            background-color: #3385ff;
         }
 
         .notifications {
@@ -283,15 +275,11 @@
             position: absolute;
             top: 40px;
             right: 0;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
             border-radius: 5px;
             padding: 10px;
             z-index: 10;
-        }
-
-        body.dark .settings-dropdown {
-            background-color: #333;
         }
 
         .settings-dropdown button {
@@ -303,13 +291,10 @@
             background: none;
             cursor: pointer;
             text-align: left;
+            color: var(--text-color);
         }
 
-        body.dark .settings-dropdown button {
-            color: #ddd;
-        }
-
-        /* Main Content */
+        /* Main Content - Scrollable */
         .main {
             margin-left: 60px;
             margin-top: 60px;
@@ -325,7 +310,7 @@
         }
 
         .upgrade-banner {
-            background-color: #d9eaff;
+            background-color: var(--upgrade-bg);
             padding: 10px;
             text-align: center;
             margin-bottom: 20px;
@@ -333,12 +318,8 @@
             animation: pulse 2s infinite;
         }
 
-        body.dark .upgrade-banner {
-            background-color: #2a2a2a;
-        }
-
         .upgrade-button {
-            background-color: #007bff;
+            background-color: var(--active-color);
             color: #fff;
             padding: 5px 10px;
             border-radius: 5px;
@@ -347,10 +328,10 @@
         }
 
         .upgrade-button:hover {
-            background-color: #0056b3;
+            background-color: var(--hover-color);
         }
 
-        /* Section Styles */
+        /* Section Styles - Common for all sections */
         .section {
             display: none;
             animation: fadeInSection 0.5s ease;
@@ -361,19 +342,14 @@
         }
 
         .dashboard-content, .trades-content, .portfolio-content, .bots-signals-content, .bots-tradingview-content, .trading-terminal-content, .marketplace-content, .signals-content, .course-content {
-            background: #fff;
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
         }
 
-        body.dark .dashboard-content, body.dark .trades-content, body.dark .portfolio-content, body.dark .bots-signals-content, body.dark .bots-tradingview-content, body.dark .trading-terminal-content, body.dark .marketplace-content, body.dark .signals-content, body.dark .course-content {
-            background: #333;
-            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
-        }
-
-        /* Charts */
+        /* Charts - Using Chart.js for dynamics */
         .chart-container {
             position: relative;
             height: 200px;
@@ -381,7 +357,22 @@
             margin-bottom: 20px;
         }
 
-        /* Course Section */
+        /* Gauge for risk in marketplace */
+        .gauge {
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        /* Tab switching for trading terminal */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Course Section - Enhanced quiz */
         .quiz-question {
             margin-bottom: 15px;
         }
@@ -394,54 +385,41 @@
             display: none;
             margin-top: 20px;
             padding: 10px;
-            background-color: #d9eaff;
+            background-color: var(--upgrade-bg);
             border-radius: 5px;
             animation: bounceIn 0.5s ease;
         }
 
-        body.dark #telegram-link {
-            background-color: #2a2a2a;
-        }
-
-        /* Stat Cards */
+        /* Stat Cards - Reusable */
         .stat-card {
-            background: #f8f9fd;
+            background: var(--card-bg);
             padding: 10px;
             border-radius: 5px;
             text-align: center;
             flex: 1;
             margin: 0 10px;
+            box-shadow: var(--shadow);
         }
 
-        body.dark .stat-card {
-            background: #444;
-        }
-
-        /* Info Cards */
+        /* Info Cards - Reusable */
         .info-card {
-            background: #f8f9fd;
+            background: var(--card-bg);
             padding: 10px;
             border-radius: 5px;
             flex: 1;
             margin: 0 10px;
+            box-shadow: var(--shadow);
         }
 
-        body.dark .info-card {
-            background: #444;
-        }
-
-        /* Bot Cards */
+        /* Bot Cards - Reusable */
         .bot-card {
-            background: #f8f9fd;
+            background: var(--card-bg);
             padding: 10px;
             border-radius: 5px;
+            box-shadow: var(--shadow);
         }
 
-        body.dark .bot-card {
-            background: #444;
-        }
-
-        /* Animations */
+        /* Animations - For smooth UI */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -463,10 +441,29 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        /* Responsive Design - For mobile/tablet updates in future */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+
+            .main {
+                margin-left: 60px;
+            }
+
+            .topbar {
+                left: 60px;
+            }
+
+            .crypto-prices {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar - Icons with labels on hover -->
     <div class="sidebar">
         <div class="sidebar-icon active" data-section="dashboard"><span class="icon">🏠</span><span class="label">Dashboard</span></div>
         <div class="sidebar-icon" data-section="trades"><span class="icon">📊</span><span class="label">Trades</span></div>
@@ -479,12 +476,12 @@
         <div class="sidebar-icon" data-section="course"><span class="icon">📚</span><span class="label">Curso BTC Esta</span></div>
     </div>
 
-    <!-- Topbar -->
+    <!-- Topbar - Logo, tabs, real-time prices, buttons -->
     <div class="topbar">
-        <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div> <!-- Add your logo image path here -->
+        <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div>
         <div class="nav-tabs">
-            <div class="nav-tab active">Live Trading</div>
-            <div class="nav-tab">Demo</div>
+            <div class="nav-tab active" data-mode="live">Live Trading</div>
+            <div class="nav-tab" data-mode="demo">Demo</div>
         </div>
         <div class="crypto-prices">
             <div class="crypto-price" id="btc-price">
@@ -516,18 +513,18 @@
         <div class="user-profile">
             <div class="settings-dropdown">
                 <button id="theme-toggle">Toggle Dark Mode</button>
-                <!-- Add more settings here if needed -->
+                <button>Logout</button> <!-- Future update: add auth logic -->
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content - Sections with dynamic content -->
     <div class="main">
         <div class="upgrade-banner">
             You're using the Free Package. Upgrade now for additional usage! <a href="#" class="upgrade-button">Upgrade</a>
         </div>
 
-        <!-- Dashboard Section -->
+        <!-- Dashboard Section - Statistics and overview -->
         <div id="dashboard" class="section dashboard-content active">
             <h2>Dashboard</h2>
             <p>Open Trades: 0 hot trades (out of 0)</p>
@@ -557,14 +554,18 @@
             <div class="chart-container">
                 <canvas id="dashboard-overview-chart"></canvas>
             </div>
+            <div>
+                <h3>Accounts</h3>
+                <a href="#">See all</a>
+            </div>
         </div>
 
-        <!-- Trades Section -->
+        <!-- Trades Section - Tabs, charts, table -->
         <div id="trades" class="section trades-content">
             <h2>Trades</h2>
             <div class="nav-tabs">
-                <div class="nav-tab active">Open</div>
-                <div class="nav-tab">Closed</div>
+                <div class="nav-tab active" data-tab="open-trades">Open</div>
+                <div class="nav-tab" data-tab="closed-trades">Closed</div>
             </div>
             <div style="display: flex;">
                 <div style="flex: 1;">
@@ -582,6 +583,14 @@
                     <p>No data collected</p>
                 </div>
             </div>
+            <div class="nav-tabs" style="margin-top: 20px;">
+                <div class="nav-tab active">1d</div>
+                <div class="nav-tab">3d</div>
+                <div class="nav-tab">1w</div>
+                <div class="nav-tab">1m</div>
+                <div class="nav-tab">3m</div>
+                <div class="nav-tab">1y</div>
+            </div>
             <table style="width: 100%; margin-top: 20px;">
                 <thead>
                     <tr>
@@ -589,6 +598,7 @@
                         <th>Symbol</th>
                         <th>Amount</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -597,13 +607,22 @@
                         <td>BTC/USDT</td>
                         <td>$100</td>
                         <td>Open</td>
+                        <td><button>Close</button></td>
                     </tr>
-                    <!-- Add more rows as needed -->
+                    <tr>
+                        <td>002</td>
+                        <td>ETH/USDT</td>
+                        <td>$200</td>
+                        <td>Closed</td>
+                        <td><button>View</button></td>
+                    </tr>
+                    <!-- Future update: load from API -->
                 </tbody>
             </table>
+            <button class="create-bot">Create Trade</button>
         </div>
 
-        <!-- Portfolio Section -->
+        <!-- Portfolio Section - Allocation, change, accounts list -->
         <div id="portfolio" class="section portfolio-content">
             <h2>Portfolio</h2>
             <div style="display: flex;">
@@ -622,150 +641,204 @@
                     <p>No data collected</p>
                 </div>
             </div>
+            <div class="nav-tabs">
+                <div class="nav-tab active">1d</div>
+                <div class="nav-tab">3d</div>
+                <div class="nav-tab">1w</div>
+                <div class="nav-tab">1m</div>
+                <div class="nav-tab">3m</div>
+                <div class="nav-tab">1y</div>
+            </div>
+            <input type="text" placeholder="Search...">
+            <h3>Filters</h3>
+            <div>
+                <label>Exchanges</label>
+                <select>
+                    <option>Bitget Futures</option>
+                    <option>Bitget Spot</option>
+                </select>
+                <button>Reset</button>
+            </div>
             <ul>
-                <li>My Bitget-Futures-8D21</li>
-                <li>My Bitget-Spot-8D21</li>
+                <li>My Bitget-Futures-8D21 <span>Bitget Futures</span></li>
+                <li>My Bitget-Spot-8D21 <span>Bitget Spot</span></li>
             </ul>
+            <h3>Assets</h3>
+            <div class="nav-tabs">
+                <div class="nav-tab active">Assets (13)</div>
+                <div class="nav-tab">Positions (14)</div>
+            </div>
             <div class="chart-container">
                 <canvas id="portfolio-asset-chart"></canvas>
             </div>
+            <button>+ Buy</button>
         </div>
 
-        <!-- My Signals Bots Section -->
+        <!-- My Signals Bots Section - Welcome, info, create button -->
         <div id="bots-signals" class="section bots-signals-content">
             <h2>My Signals Bots</h2>
-            <div style="background: #d9eaff; padding: 20px; border-radius: 10px;">
+            <div style="background: var(--upgrade-bg); padding: 20px; border-radius: 10px;">
                 <h3>Welcome to Signals Bots!</h3>
                 <p>Revolutionizing auto trading with advanced strategies, full flexibility, and a user-friendly interface. The Signals Bots are suitable for both novice and advanced traders. These smart bots redefine trading automation, offering hassle-free following of expert trades without requiring extensive time or effort.</p>
-                <button>Watch Video</button>
-                <button>Learn More</button>
+                <button onclick="window.open('https://example.com/video', '_blank')">Watch Video</button>
+                <button onclick="window.open('https://example.com/learn', '_blank')">Learn More</button>
             </div>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
                 <div class="info-card">
                     <h4>What is the Cornix Signals Bot?</h4>
                     <p>In the dynamic world of cryptocurrency trading, the Cornix Signals Bot emerges as a sophisticated and user-friendly...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read1" target="_blank">Read More</a>
                 </div>
                 <div class="info-card">
                     <h4>How to Use Cornix Signals Bot: A Step-by-Step Guide</h4>
                     <p>Easily create your Signals Bot with only 2 steps. The Signals Bot automatic...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read2" target="_blank">Read More</a>
                 </div>
                 <div class="info-card">
                     <h4>Signals Bot Advanced Settings</h4>
                     <p>The advanced settings are made for advanced users and allow full control of the signals bot config...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read3" target="_blank">Read More</a>
                 </div>
             </div>
             <button class="create-bot">Create Signals Bot</button>
         </div>
 
-        <!-- My TradingView Bots Section -->
+        <!-- My TradingView Bots Section - Similar to signals -->
         <div id="bots-tradingview" class="section bots-tradingview-content">
             <h2>My TradingView Bots</h2>
-            <div style="background: #d9eaff; padding: 20px; border-radius: 10px;">
+            <div style="background: var(--upgrade-bg); padding: 20px; border-radius: 10px;">
                 <h3>Welcome to TradingView Bots!</h3>
                 <p>Combine the power of TradingView with Cornix's advanced trading automation. Our TradingView Bots let you use your own alerts and Pine-scripts or copy those you trust to ensure you never miss an opportunity. Trade on your terms with an easy and enjoyable blend of world-class indicators and cutting-edge automation.</p>
-                <button>Watch Video</button>
-                <button>Learn More</button>
+                <button onclick="window.open('https://example.com/video', '_blank')">Watch Video</button>
+                <button onclick="window.open('https://example.com/learn', '_blank')">Learn More</button>
             </div>
             <div style="display: flex; justify-content: space-around; margin-top: 20px;">
                 <div class="info-card">
                     <h4>What is the Cornix TradingView Bot?</h4>
                     <p>The Cornix Trading View Bot is an advanced automation tool that allows you to execute trades directly...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read1" target="_blank">Read More</a>
                 </div>
                 <div class="info-card">
                     <h4>Create a TradingView Bot</h4>
                     <p>TradingView Bots will create trades based on a pre-configured strategy when triggered by pre-defined...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read2" target="_blank">Read More</a>
                 </div>
                 <div class="info-card">
                     <h4>Create TradingView Alerts and Connect them to your Bot</h4>
                     <p>Currently, TradingView integration with Cornix is only possible by using the Webhook URL method...</p>
-                    <a href="#">Read More</a>
+                    <a href="https://example.com/read3" target="_blank">Read More</a>
                 </div>
             </div>
             <button class="create-bot">Create TradingView Bot</button>
         </div>
 
-        <!-- Trading Terminal Section -->
+        <!-- Trading Terminal Section - Tabbed interface -->
         <div id="trading-terminal" class="section trading-terminal-content">
             <h2>Trading Terminal</h2>
             <div class="nav-tabs">
-                <div class="nav-tab active">General</div>
-                <div class="nav-tab">Entries</div>
-                <div class="nav-tab">Take-Profits</div>
-                <div class="nav-tab">Stop</div>
+                <div class="nav-tab active" data-tab="general">General</div>
+                <div class="nav-tab" data-tab="entries">Entries</div>
+                <div class="nav-tab" data-tab="take-profits">Take-Profits</div>
+                <div class="nav-tab" data-tab="stop">Stop</div>
             </div>
-            <form>
-                <label>Account</label>
-                <select>
-                    <option>My-Bitget-Spot-8D21</option>
-                </select>
-                <label>Symbol</label>
-                <input type="text" value="BTC/USDT">
-                <label>New Amount (USDT)</label>
-                <input type="text">
-                <label>Available Amount</label>
-                <p>27.269 USDT (27.26 USD)</p>
-                <label>Trade Amount</label>
-                <input type="text" value="5.03 USDT (5.03 USD)">
-                <button>Create Trade</button>
-            </form>
+            <div class="tab-content active" id="general">
+                <form>
+                    <label>Account</label>
+                    <select>
+                        <option>My-Bitget-Spot-8D21</option>
+                        <option>My-Bitget-Futures-8D21</option>
+                    </select>
+                    <label>Symbol</label>
+                    <input type="text" value="BTC/USDT">
+                    <label>New Amount (USDT)</label>
+                    <input type="number" step="0.01">
+                    <label>Available Amount</label>
+                    <p id="available-amount">27.269 USDT (27.26 USD)</p>
+                    <label>Trade Amount</label>
+                    <input type="number" step="0.01" value="5.03">
+                    <button type="submit">Create Trade</button>
+                </form>
+            </div>
+            <div class="tab-content" id="entries">
+                <p>Entries configuration here.</p>
+                <!-- Future update: add form fields for entries -->
+            </div>
+            <div class="tab-content" id="take-profits">
+                <p>Take-profits configuration here.</p>
+                <!-- Future update: add form fields for take-profits -->
+            </div>
+            <div class="tab-content" id="stop">
+                <p>Stop configuration here.</p>
+                <!-- Future update: add form fields for stop -->
+            </div>
         </div>
 
-        <!-- Marketplace Section -->
+        <!-- Marketplace Section - Bot listings with gauges -->
         <div id="marketplace" class="section marketplace-content">
             <h2>Marketplace</h2>
+            <input type="text" placeholder="Search...">
+            <div class="nav-tabs">
+                <div class="nav-tab active">Score</div>
+            </div>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                 <div class="bot-card">
+                    <img src="bot-icon1.png" alt="Bot Icon" style="width: 50px;">
                     <h3>The MARTINGALE Bot</h3>
-                    <p>★★★★☆ (4.2)</p>
+                    <p>★★★★☆ (4.2/5)</p>
                     <p>PnL (6M): 109.69% ↑</p>
                     <p>PnL (3M): 67.68% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%); height: 10px; border-radius: 5px;"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%);"></div>
                     <p>Medium Risk</p>
+                    <span>50% OFF</span>
                     <button>Free Trial $ $ $</button>
                 </div>
                 <div class="bot-card">
+                    <img src="bot-icon2.png" alt="Bot Icon" style="width: 50px;">
                     <h3>Crypto Dreams</h3>
                     <p>Not enough reviews</p>
                     <p>PnL (6M): 95.56% ↑</p>
                     <p>PnL (3M): 42.49% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%); height: 10px; border-radius: 5px;"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%);"></div>
                     <p>Low Risk</p>
+                    <span>NEW 50% OFF</span>
                     <button>Free Trial $ $ $</button>
                 </div>
                 <div class="bot-card">
+                    <img src="bot-icon3.png" alt="Bot Icon" style="width: 50px;">
                     <h3>GreenCrypto Swing</h3>
                     <p>Not enough reviews</p>
                     <p>PnL (6M): 51.92% ↑</p>
                     <p>PnL (3M): 15.77% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 90%, yellow 90% 95%, red 95% 100%); height: 10px; border-radius: 5px;"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 90%, yellow 90% 95%, red 95% 100%);"></div>
                     <p>Low Risk</p>
+                    <span>NEW 30% OFF</span>
                     <button>Free Trial $ $ $</button>
                 </div>
                 <div class="bot-card">
+                    <img src="bot-icon4.png" alt="Bot Icon" style="width: 50px;">
                     <h3>Solana Scalper</h3>
                     <p>Not enough reviews</p>
                     <p>PnL (6M): 70.64% ↑</p>
                     <p>PnL (3M): 39.63% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 85%, yellow 85% 92%, red 92% 100%); height: 10px; border-radius: 5px;"></div>
+                    <div class="gauge" style="background: conic-gradient(green 0% 85%, yellow 85% 92%, red 92% 100%);"></div>
                     <p>Low Risk</p>
+                    <span>50% OFF</span>
                     <button>Free Trial $ $ $</button>
                 </div>
+                <!-- Future update: load bots from API -->
             </div>
         </div>
 
-        <!-- Signals Section -->
+        <!-- Signals Section - Tabs, search, table -->
         <div id="signals" class="section signals-content">
             <h2>Signals</h2>
             <div class="nav-tabs">
-                <div class="nav-tab active">Open</div>
-                <div class="nav-tab">Closed</div>
+                <div class="nav-tab active" data-tab="open-signals">Open</div>
+                <div class="nav-tab" data-tab="closed-signals">Closed</div>
             </div>
             <input type="text" placeholder="Search...">
+            <button>Filters</button>
+            <button>Reset</button>
             <table>
                 <thead>
                     <tr>
@@ -788,12 +861,21 @@
                         <td><button>View</button></td>
                         <td>Group 1</td>
                     </tr>
-                    <!-- Add more sample rows -->
+                    <tr>
+                        <td>ETH/USDT</td>
+                        <td>Bitget</td>
+                        <td>$4,413</td>
+                        <td>1.8%</td>
+                        <td>10 min ago</td>
+                        <td><button>View</button></td>
+                        <td>Group 2</td>
+                    </tr>
+                    <!-- Future update: load signals from API -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Curso BTC Esta Section -->
+        <!-- Curso BTC Esta Section - Social tasks and quiz -->
         <div id="course" class="section course-content">
             <h2>Curso BTC Esta</h2>
             <p>Para acceder al curso, completa todas las tareas sociales y responde correctamente al cuestionario sobre BTC. Una vez completado, se revelará el enlace de Telegram.</p>
@@ -858,7 +940,7 @@
     </div>
 
     <script>
-        // Sidebar Navigation
+        // Core Navigation - Sidebar sections
         const sidebarIcons = document.querySelectorAll('.sidebar-icon');
         const sections = document.querySelectorAll('.section');
 
@@ -872,37 +954,42 @@
             });
         });
 
-        // Nav Tabs
-        const navTabs = document.querySelectorAll('.nav-tab');
-        navTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                navTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+        // Nav Tabs - General tab switching (reusable)
+        function setupTabs(container) {
+            const tabs = container.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    // Future update: load data based on tab
+                });
             });
-        });
+        }
 
-        // User Settings Dropdown
+        document.querySelectorAll('.nav-tabs').forEach(setupTabs);
+
+        // User Settings - Dropdown and theme toggle
         const userProfile = document.querySelector('.user-profile');
         const settingsDropdown = document.querySelector('.settings-dropdown');
+        const themeToggle = document.getElementById('theme-toggle');
 
         userProfile.addEventListener('click', () => {
             settingsDropdown.style.display = settingsDropdown.style.display === 'block' ? 'none' : 'block';
         });
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             themeToggle.textContent = document.body.classList.contains('dark') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
         });
 
-        // Fetch Crypto Prices Function
+        // Real-time Crypto Prices - API call, update every 30s
         function updateCryptoPrices() {
             fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
                 .then(response => response.json())
                 .then(data => {
                     const updatePrice = (id, coin) => {
                         const elem = document.getElementById(`${coin}-price`);
+                        if (!elem) return;
                         const price = data[coin].usd.toFixed(2);
                         const change = data[coin].usd_24h_change.toFixed(2);
                         const direction = change > 0 ? '▲' : '▼';
@@ -916,75 +1003,89 @@
                     updatePrice('ada', 'cardano');
                     updatePrice('not', 'notcoin');
                     updatePrice('doge', 'dogecoin');
-                });
+                })
+                .catch(error => console.error('Error fetching prices:', error));
         }
 
-        // Initial fetch and set interval for real-time updates every 30 seconds
         updateCryptoPrices();
         setInterval(updateCryptoPrices, 30000);
 
-        // Charts
-        // Dashboard Overview (Line Chart example)
+        // Charts - Initialize with sample data, updateable via API in future
+        // Dashboard Overview
         new Chart(document.getElementById('dashboard-overview-chart'), {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{ label: 'Performance', data: [0, 10, 5, 15, 10, 20], borderColor: '#007bff' }]
+                datasets: [{ label: 'Performance', data: [0, 10, 5, 15, 10, 20], borderColor: var(--active-color) }]
             },
             options: { responsive: true }
         });
 
-        // Trades Allocation (Doughnut)
+        // Trades Allocation
         new Chart(document.getElementById('trades-allocation-chart'), {
             type: 'doughnut',
             data: {
                 labels: ['BTC', 'ETH', 'Others'],
-                datasets: [{ data: [40, 30, 30], backgroundColor: ['#007bff', '#00bfff', '#ccc'] }]
+                datasets: [{ data: [40, 30, 30], backgroundColor: [var(--active-color), '#00bfff', '#ccc'] }]
             },
             options: { responsive: true }
         });
 
-        // Trades Number (Bar)
+        // Trades Number
         new Chart(document.getElementById('trades-number-chart'), {
             type: 'bar',
             data: {
                 labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Trades', data: [5, 10, 15, 20, 25, 30], backgroundColor: '#007bff' }]
+                datasets: [{ label: 'Trades', data: [5, 10, 15, 20, 25, 30], backgroundColor: var(--active-color) }]
             },
             options: { responsive: true }
         });
 
-        // Portfolio Allocation (Doughnut)
+        // Portfolio Allocation
         new Chart(document.getElementById('portfolio-allocation-chart'), {
             type: 'doughnut',
             data: {
                 labels: ['Bitget Futures', 'Bitget Spot'],
-                datasets: [{ data: [60, 40], backgroundColor: ['#007bff', '#00bfff'] }]
+                datasets: [{ data: [60, 40], backgroundColor: [var(--active-color), '#00bfff'] }]
             },
             options: { responsive: true }
         });
 
-        // Portfolio Change (Bar)
+        // Portfolio Change
         new Chart(document.getElementById('portfolio-change-chart'), {
             type: 'bar',
             data: {
                 labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Change', data: [2, 5, -1, 10, 8, 15], backgroundColor: '#007bff' }]
+                datasets: [{ label: 'Change', data: [2, 5, -1, 10, 8, 15], backgroundColor: var(--active-color) }]
             },
             options: { responsive: true }
         });
 
-        // Portfolio Asset Chart (Line)
+        // Portfolio Asset Chart
         new Chart(document.getElementById('portfolio-asset-chart'), {
             type: 'line',
             data: {
                 labels: ['1h', '1d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'BTC/USDT', data: [110000, 112000, 115000, 120000, 118000, 125000], borderColor: '#007bff' }]
+                datasets: [{ label: 'BTC/USDT', data: [110000, 112000, 115000, 120000, 118000, 125000], borderColor: var(--active-color) }]
             },
             options: { responsive: true }
         });
 
-        // Course Verification
+        // Trading Terminal Tabs
+        const terminalTabs = document.querySelectorAll('#trading-terminal .nav-tab');
+        const terminalContents = document.querySelectorAll('#trading-terminal .tab-content');
+
+        terminalTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                terminalTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                terminalContents.forEach(c => c.classList.remove('active'));
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Course Verification - Checkboxes and quiz
         const followChecks = document.querySelectorAll('.follow-check');
         const verifyButton = document.getElementById('verify-quiz');
         const telegramLink = document.getElementById('telegram-link');
@@ -1002,6 +1103,10 @@
                 alert('Por favor, completa todas las tareas y responde correctamente al cuestionario.');
             }
         });
+
+        // Future update: Add user authentication
+        // Future update: Integrate real trading API
+        // Future update: Add websocket for real-time updates
     </script>
 </body>
 </html>
