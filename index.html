@@ -381,6 +381,11 @@
     .bot-modal .strategy-option { margin-bottom: 10px;}
     .bot-modal button[type="submit"] { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 12px; font-weight: 600; cursor: pointer; transition: background var(--transition);}
     .bot-modal button[type="submit"]:hover { background: var(--primary-hover);}
+    .bot-type-options { margin-bottom: 20px;}
+    .bot-type-option { display: block; margin-bottom: 10px;}
+    .bot-guide { margin-top: 20px;}
+    .bot-guide h3 { font-size: 1.2em; margin-bottom: 10px;}
+    .bot-guide ul { list-style-type: disc; padding-left: 20px;}
   </style>
 </head>
 <body>
@@ -796,14 +801,29 @@
     <div class="bot-modal">
       <button class="close-btn" id="close-bot-modal">&times;</button>
       <h2>Create Bot</h2>
+      <div class="bot-type-options">
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="signals"> Signals Bot</label>
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="grid"> Grid Bot</label>
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="dca"> DCA Bot</label>
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview"> TradingView Bot</label>
+      </div>
+      <div id="tradingview-guide" style="display: none;">
+        <div class="bot-guide">
+          <h3>How Does the Trading View Bot Work?</h3>
+          <p>The Trading View Bot works by integrating TradingView alerts with financial harmony Bots. Set up alerts in TradingView based on technical indicators, price movements, or Pine scripts. When an alert is triggered, the bot automatically executes the trade on your exchange account.</p>
+          <h3>Key Features</h3>
+          <ul>
+            <li>Customize Trade Execution: Set up alerts based on indicators, trend lines, or price movements. Configure trades with specific entry, stop-loss, and take-profit levels.</li>
+            <li>Seamless Integration with Cornix: Easily link your TradingView alerts to Cornix by using your Bot's UUIDs for Trade Opening and for Trade Closing.</li>
+            <li>Supports Long and Short Trades: Execute both long and short trades based on predefined alerts.</li>
+            <li>Advanced Risk Management: Set stop-loss and take-profit levels for each trade. Utilize trailing stop and trailing take-profit strategies to lock in profits.</li>
+            <li>Fully Automated Trading: No need for manual order execution. Trade execution occurs automatically when alerts are triggered.</li>
+          </ul>
+          <h3>How to Set Up a Trading View Bot</h3>
+          <p>Getting started with Cornix Trading View Bots is simple and requires just a few steps. Follow this guide to set up and start automating your trades efficiently:</p>
+        </div>
+      </div>
       <form id="bot-form">
-        <label for="bot-type">Bot Type</label>
-        <select id="bot-type">
-          <option value="signals">Signals Bot</option>
-          <option value="tradingview">TradingView Bot</option>
-          <option value="dca">DCA Bot</option>
-          <option value="grid">Grid Bot</option>
-        </select>
         <label>Strategy</label>
         <div class="strategy-options">
           <label class="strategy-option"><input type="radio" name="strategy" value="martingale"> Martingale (Basic: Double bet after loss)</label>
@@ -815,6 +835,25 @@
         <input type="text" id="symbol" value="BTC/USDT">
         <label for="amount">Amount (USDT)</label>
         <input type="text" id="amount" value="100">
+        <label for="entry-level">Entry Level</label>
+        <input type="text" id="entry-level">
+        <label for="stop-loss">Stop Loss</label>
+        <input type="text" id="stop-loss">
+        <label for="take-profit">Take Profit</label>
+        <input type="text" id="take-profit">
+        <label for="trailing-stop">Trailing Stop</label>
+        <input type="text" id="trailing-stop">
+        <label for="trailing-take-profit">Trailing Take Profit</label>
+        <input type="text" id="trailing-take-profit">
+        <label for="trade-type">Trade Type</label>
+        <select id="trade-type">
+          <option value="long">Long</option>
+          <option value="short">Short</option>
+        </select>
+        <label for="uuid-open">UUID for Trade Opening</label>
+        <input type="text" id="uuid-open">
+        <label for="uuid-close">UUID for Trade Closing</label>
+        <input type="text" id="uuid-close">
         <button type="submit">Create Bot</button>
       </form>
     </div>
@@ -1005,6 +1044,13 @@
       e.preventDefault();
       alert('Bot created with selected strategy!');
       document.getElementById('bot-modal-bg').classList.remove('active');
+    });
+
+    // Show TradingView Guide when selected
+    document.querySelectorAll('input[name="bot-type"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.getElementById('tradingview-guide').style.display = radio.value === 'tradingview' ? 'block' : 'none';
+      });
     });
 
     // Billing Modal Logic
