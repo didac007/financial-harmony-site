@@ -805,9 +805,9 @@
         <label class="bot-type-option"><input type="radio" name="bot-type" value="signals"> Signals Bot</label>
         <label class="bot-type-option"><input type="radio" name="bot-type" value="grid"> Grid Bot</label>
         <label class="bot-type-option"><input type="radio" name="bot-type" value="dca"> DCA Bot</label>
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview"> TradingView Bot</label>
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview" checked> TradingView Bot</label>
       </div>
-      <div id="tradingview-guide" style="display: none;">
+      <div id="tradingview-guide">
         <div class="bot-guide">
           <h3>How Does the Trading View Bot Work?</h3>
           <p>The Trading View Bot works by integrating TradingView alerts with financial harmony Bots. Set up alerts in TradingView based on technical indicators, price movements, or Pine scripts. When an alert is triggered, the bot automatically executes the trade on your exchange account.</p>
@@ -824,37 +824,77 @@
         </div>
       </div>
       <form id="bot-form">
-        <label>Strategy</label>
-        <div class="strategy-options">
-          <label class="strategy-option"><input type="radio" name="strategy" value="martingale"> Martingale (Basic: Double bet after loss)</label>
-          <label class="strategy-option"><input type="radio" name="strategy" value="dca"> DCA (Dollar Cost Averaging: Buy at intervals)</label>
-          <label class="strategy-option"><input type="radio" name="strategy" value="grid"> Grid (Buy low, sell high in range)</label>
-          <label class="strategy-option"><input type="radio" name="strategy" value="custom"> Custom</label>
+        <div class="nav-tabs" style="margin-bottom: 16px;">
+          <button class="nav-tab active" data-tab="general">General</button>
+          <button class="nav-tab" data-tab="entries">Entries</button>
+          <button class="nav-tab" data-tab="take-profits">Take-Profits</button>
+          <button class="nav-tab" data-tab="stop">Stop</button>
+          <button class="nav-tab" data-tab="advanced">Advanced</button>
         </div>
-        <label for="symbol">Symbol</label>
-        <input type="text" id="symbol" value="BTC/USDT">
-        <label for="amount">Amount (USDT)</label>
-        <input type="text" id="amount" value="100">
-        <label for="entry-level">Entry Level</label>
-        <input type="text" id="entry-level">
-        <label for="stop-loss">Stop Loss</label>
-        <input type="text" id="stop-loss">
-        <label for="take-profit">Take Profit</label>
-        <input type="text" id="take-profit">
-        <label for="trailing-stop">Trailing Stop</label>
-        <input type="text" id="trailing-stop">
-        <label for="trailing-take-profit">Trailing Take Profit</label>
-        <input type="text" id="trailing-take-profit">
-        <label for="trade-type">Trade Type</label>
-        <select id="trade-type">
-          <option value="long">Long</option>
-          <option value="short">Short</option>
-        </select>
-        <label for="uuid-open">UUID for Trade Opening</label>
-        <input type="text" id="uuid-open">
-        <label for="uuid-close">UUID for Trade Closing</label>
-        <input type="text" id="uuid-close">
-        <button type="submit">Create Bot</button>
+        <div class="tab-content active" id="general">
+          <label for="bot-name">Bot Name</label>
+          <input type="text" id="bot-name" value="BTC/USD TV Bot">
+          <label for="account">Account</label>
+          <select id="account">
+            <option>My-Bitget-Futures-8D21</option>
+          </select>
+          <label for="symbol">Symbol</label>
+          <select id="symbol">
+            <option>BTC/USDT</option>
+            <option>ETH/USDT</option>
+            <option>ADA/USDT</option>
+            <option>XRP/USDT</option>
+            <option>SOL/USDT</option>
+            <!-- More pairs from Bitget, etc. -->
+          </select>
+          <label for="amount-per-trade">Amount Per Trade</label>
+          <input type="number" id="amount-per-trade" value="12.29">
+          <label>Direction</label>
+          <div>
+            <label><input type="radio" name="direction" value="long" checked> Long</label>
+            <label><input type="radio" name="direction" value="short"> Short</label>
+          </div>
+          <label for="margin-type">Margin Type</label>
+          <select id="margin-type">
+            <option>Isolated</option>
+            <option>Cross</option>
+          </select>
+          <label for="multiplier">Multiplier</label>
+          <input type="number" id="multiplier" value="1">
+        </div>
+        <div class="tab-content" id="entries">
+          <label for="entry-strategy">Entry Strategy</label>
+          <select id="entry-strategy">
+            <option>Expert Martingale (Double position after loss, stop-loss 10%)</option>
+            <option>Expert DCA (Buy every 5% drop, max 5 orders)</option>
+            <option>Expert Grid (Buy low/sell high in 3% range)</option>
+            <option>Custom</option>
+          </select>
+        </div>
+        <div class="tab-content" id="take-profits">
+          <label for="take-profit-levels">Take Profit Levels</label>
+          <input type="text" id="take-profit-levels" placeholder="e.g. 1.5%, 3%, 5%">
+        </div>
+        <div class="tab-content" id="stop">
+          <label for="stop-loss">Stop Loss (%)</label>
+          <input type="number" id="stop-loss" value="10">
+          <label for="trailing-stop">Trailing Stop (%)</label>
+          <input type="number" id="trailing-stop" value="2">
+        </div>
+        <div class="tab-content" id="advanced">
+          <label for="uuid-open">UUID for Trade Opening</label>
+          <input type="text" id="uuid-open">
+          <label for="uuid-close">UUID for Trade Closing</label>
+          <input type="text" id="uuid-close">
+          <label for="max-orders">Max Orders</label>
+          <input type="number" id="max-orders" value="5">
+          <label for="interval-drop">Interval Drop (%)</label>
+          <input type="number" id="interval-drop" value="5">
+        </div>
+        <div class="tradingview-widget-container" style="height: 300px; margin-top: 20px;">
+          <div id="bot-chart-widget"></div>
+        </div>
+        <button type="submit">Create TradingView Bot</button>
       </form>
     </div>
   </div>
@@ -1051,6 +1091,72 @@
       radio.addEventListener('change', () => {
         document.getElementById('tradingview-guide').style.display = radio.value === 'tradingview' ? 'block' : 'none';
       });
+    });
+
+    // Bot Form Tabs
+    const botTabs = document.querySelectorAll('.bot-modal .nav-tab');
+    const botContents = document.querySelectorAll('.bot-modal .tab-content');
+
+    botTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        botTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        botContents.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Load TradingView Chart in Bot Modal
+    new TradingView.widget({
+      "container_id": "bot-chart-widget",
+      "width": "100%",
+      "height": "300",
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "es",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "studies": ["MA", "RSI"],
+      "show_popup_button": true,
+      "popup_width": "1000",
+      "popup_height": "650"
+    });
+
+    // Load Exchange Pairs (simulated, can be fetched from API in real app)
+    const exchangePairs = [
+      'BTC/USDT', 'ETH/USDT', 'ADA/USDT', 'XRP/USDT', 'SOL/USDT', 'DOGE/USDT', 'BNB/USDT', 'TRX/USDT', 'LINK/USDT', 'DOT/USDT'
+      // Add more from Bitget or others
+    ];
+    const symbolSelect = document.getElementById('symbol');
+    exchangePairs.forEach(pair => {
+      const option = document.createElement('option');
+      option.value = pair;
+      option.textContent = pair;
+      symbolSelect.appendChild(option);
+    });
+
+    // Expert Strategy Selection
+    document.getElementById('entry-strategy').addEventListener('change', (e) => {
+      const value = e.target.value;
+      if (value === 'Expert Martingale') {
+        // Set parameters for Martingale
+        document.getElementById('stop-loss').value = '10';
+        document.getElementById('take-profit').value = '5';
+        // etc.
+      } else if (value === 'Expert DCA') {
+        // Set for DCA
+        document.getElementById('interval-drop').value = '5';
+        document.getElementById('max-orders').value = '5';
+      } else if (value === 'Expert Grid') {
+        // Set for Grid
+        document.getElementById('interval-drop').value = '3';
+        document.getElementById('max-orders').value = '10';
+      }
+      // For custom, user edits freely
     });
 
     // Billing Modal Logic
