@@ -1,676 +1,655 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Harmony Dashboard (Mejorado)</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1749b1;
-            --primary-light: #e0eaff;
-            --bg: #f7fafd;
-            --sidebar: #fff;
-            --text: #1e293b;
-            --muted: #64748b;
-            --border: #e5e7eb;
-            --card: #fff;
-            --accent: #f1f5f9;
-            --radius: 16px;
-            --shadow: 0 2px 8px #0001;
-            --transition: 0.2s;
-        }
-        * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            overflow: hidden;
-            transition: background .3s, color .3s;
-        }
-        body.dark {
-            --bg: #181c23;
-            --sidebar: #23272f;
-            --card: #23272f;
-            --accent: #1c2129;
-            --text: #dbeafe;
-            --muted: #7a8598;
-            --border: #30363d;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 80px;
-            background: var(--sidebar);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 0;
-            gap: 8px;
-            z-index: 2;
-            position: fixed;
-            height: 100vh;
-            transition: width var(--transition), background var(--transition);
-        }
-        .sidebar .logo {
-            width: 48px; height: 48px;
-            background: var(--primary-light);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-        }
-        .sidebar .sidebar-icon {
-            width: 100%;
-            min-width: 52px;
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            outline: none;
-            background: none;
-            color: var(--muted);
-            font-size: 22px;
-            cursor: pointer;
-            border-radius: 12px;
-            margin-bottom: 5px;
-            transition: background var(--transition), color var(--transition), transform var(--transition);
-            position: relative;
-        }
-        .sidebar .sidebar-icon.active,
-        .sidebar .sidebar-icon:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            transform: scale(1.05);
-        }
-        .sidebar .label {
-            display: none;
-            margin-left: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0;
-        }
-        .sidebar:hover {
-            width: 230px;
-        }
-        .sidebar:hover .sidebar-icon {
-            justify-content: flex-start;
-            padding-left: 22px;
-        }
-        .sidebar:hover .label {
-            display: inline;
-        }
-        @media (max-width: 900px) {
-            .sidebar { width: 54px; }
-            .sidebar .logo { width: 36px; height:36px; }
-            .sidebar .sidebar-icon { font-size: 19px; }
-        }
-
-        /* Topbar */
-        .topbar {
-            position: fixed; left: 80px; right: 0; top: 0; height: 68px;
-            background: linear-gradient(95deg, #e0eaff 0%, #fff 90%);
-            border-bottom: 1px solid var(--border);
-            display: flex; align-items: center;
-            padding: 0 36px;
-            z-index: 1;
-            transition: left var(--transition), background var(--transition), border-bottom var(--transition);
-        }
-        .sidebar:hover ~ .topbar { left: 230px; }
-        body.dark .topbar {
-            background: linear-gradient(95deg, #1b2333 0%, #23272f 80%);
-            border-bottom: 1px solid var(--border);
-        }
-        .topbar .logo { margin-right: 24px;}
-        .topbar .logo img { height: 40px; }
-        .topbar .nav-tabs {
-            display: flex; gap: 0; margin-right: 28px;
-        }
-        .topbar .nav-tab {
-            padding: 9px 24px; border-radius: 10px 10px 0 0;
-            border: none; background: none; font-weight: 600;
-            color: var(--muted); cursor: pointer; font-size: 1.05rem;
-            margin-right: 2px; transition: background var(--transition), color var(--transition);
-        }
-        .topbar .nav-tab.active, .topbar .nav-tab:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-        .topbar .crypto-prices {
-            display: flex; gap: 16px; align-items: center; font-size: 1rem; margin-right: 16px;
-        }
-        .crypto-price { display: flex; align-items: center; gap:4px;}
-        .crypto-price .crypto-icon {
-            width: 22px; height: 22px; border-radius: 50%; background: orange;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; color: #fff; font-size: 1rem; margin-right: 4px;
-            transition: background var(--transition);
-        }
-        .crypto-price .price-change.up { color: #16a34a;}
-        .crypto-price .price-change.down { color: #dc2626;}
-        .topbar .create-bot {
-            background: var(--primary); color: #fff; border: none;
-            font-weight: 600; border-radius: 8px; padding: 8px 16px; cursor: pointer;
-            margin-right: 10px; transition: background var(--transition), transform var(--transition);
-        }
-        .topbar .create-bot:hover { background: var(--primary-hover); transform: scale(1.07);}
-        .topbar .notifications {
-            position: relative; margin-right: 8px;
-        }
-        .topbar .bell { font-size: 1.3rem; cursor: pointer; }
-        .topbar .notification-count {
-            position: absolute; top: -7px; right: -7px; background: #dc2626; color: #fff; border-radius: 50%; padding: 2px 7px; font-size: .8rem; font-weight: bold;
-        }
-        .topbar .user-profile {
-            width: 38px; height: 38px; border-radius: 50%; background: var(--primary-light);
-            display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 700; color: var(--primary);
-            cursor: pointer; position: relative;
-        }
-        .settings-dropdown {
-            display: none; position: absolute; top: 48px; right: 0;
-            background: var(--card); box-shadow: 0 2px 16px #0002; border-radius: var(--radius); padding: 12px 10px; z-index: 11;
-        }
-        .settings-dropdown button {
-            background: none; border: none; cursor: pointer;
-            font-size: 1rem; color: var(--primary); font-weight: 600; padding: 7px; border-radius: 8px; margin-bottom: 2px;
-        }
-        .settings-dropdown button:hover { background: var(--primary-light);}
-        body.dark .settings-dropdown { background: var(--accent); }
-
-        /* Main Content */
-        .main {
-            margin-left: 80px; margin-top: 68px; padding: 32px 32px 18px 32px;
-            overflow-y: auto; height: calc(100vh - 68px); background: var(--bg);
-            transition: margin-left var(--transition);
-        }
-        .sidebar:hover ~ .main { margin-left: 230px; }
-        @media (max-width: 900px) {
-            .main { margin-left: 54px; padding: 13px 2px 6px 8px;}
-            .sidebar:hover ~ .main { margin-left: 230px;}
-        }
-
-        /* Upgrade Banner */
-        .upgrade-banner {
-            background: linear-gradient(90deg, #e0eaff 0%, #dbeafe 100%);
-            padding: 12px 0; text-align: center; margin-bottom: 20px; border-radius: 10px;
-            animation: pulse 2.2s infinite;
-        }
-        body.dark .upgrade-banner { background: linear-gradient(90deg, #253458 0%, #23272f 100%);}
-        .upgrade-button {
-            background: var(--primary); color: #fff; padding: 5px 13px; border-radius: 7px; text-decoration: none; font-weight: 600; margin-left: 10px;
-            transition: background var(--transition);
-        }
-        .upgrade-button:hover { background: var(--primary-hover);}
-        @keyframes pulse { 0%{transform:scale(1);} 50%{transform:scale(1.018);} 100%{transform:scale(1);} }
-
-        /* Section Styles */
-        .section { display: none; animation: fadeInSection 0.5s cubic-bezier(0.29, 1, 0.49, 1.24);}
-        .section.active { display: block;}
-        @keyframes fadeInSection { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
-
-        /* Cards, Charts, etc */
-        .stat-card, .info-card, .bot-card {
-            background: var(--card); border-radius: 12px; padding: 18px; box-shadow: var(--shadow);
-            margin: 0 10px 24px 0; min-width: 150px; text-align: center;
-        }
-        .stat-card h3 { margin-top: 0; font-size: 1.07rem; font-weight: 700; color: var(--primary);}
-        .stat-card p { font-size: 1.4rem; font-weight: 700; margin:0; }
-        .info-card h4 { margin: 0 0 4px 0; font-size: 1.07rem; color: var(--primary);}
-        .bot-card h3 { margin: 0 0 6px 0; }
-        .gauge { width: 100%; height: 12px; border-radius: 7px; margin: 10px 0;}
-        .chart-container { position: relative; height: 180px; width: 100%; margin-bottom: 18px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 18px; }
-        th, td { border: 1px solid var(--border); padding: 9px 6px; font-size: .97rem; }
-        th { background: var(--primary-light); color: var(--primary);}
-        tr:nth-child(even) { background: var(--accent);}
-        .nav-tabs { display: flex; gap: 0; margin-bottom: 15px;}
-        .nav-tab { padding: 9px 24px; border-radius: 10px 10px 0 0; border: none; background: none; font-weight: 600; color: var(--muted); cursor: pointer; font-size: 1.05rem; margin-right: 2px; transition: background var(--transition), color var(--transition);}
-        .nav-tab.active, .nav-tab:hover { background: var(--primary-light); color: var(--primary);}
-        input[type="text"], select {
-            padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; margin-bottom: 8px; width: 90%; background: var(--accent);
-        }
-        input[type="checkbox"], input[type="radio"] {margin-right:7px;}
-        .create-bot, button[type="submit"], button:not(.nav-tab):not(.upgrade-button) {
-            background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-weight: 600; margin-top: 5px; cursor: pointer; transition: background .2s, transform .2s;
-        }
-        .create-bot:hover, button[type="submit"]:hover, button:not(.nav-tab):not(.upgrade-button):hover { background: var(--primary-hover); transform:scale(1.03);}
-        /* Animations */
-        @media (max-width:600px){
-            .main{padding:0 2px;}
-            .chart-container{padding:0;width:100%;}
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Financial Harmony - Billing</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+  <!-- Icon library for professional sidebar icons (RemixIcon) -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1749b1;
+      --primary-light: #e0eaff;
+      --bg: #f7fafd;
+      --sidebar: #fff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --card: #fff;
+      --accent: #f1f5f9;
+      --radius: 16px;
+      --shadow: 0 2px 8px #0001;
+      --transition: 0.2s;
+    }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+      transition: background .3s, color .3s;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 80px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      gap: 8px;
+      z-index: 2;
+      position: fixed;
+      height: 100vh;
+      transition: width var(--transition), background var(--transition);
+    }
+    .sidebar .logo {
+      width: 48px; height: 48px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold;
+      color: var(--primary);
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .sidebar .sidebar-icon {
+      width: 100%;
+      min-width: 52px;
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer;
+      border-radius: 12px;
+      margin-bottom: 5px;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+      position: relative;
+      outline: none;
+    }
+    .sidebar .sidebar-icon.active,
+    .sidebar .sidebar-icon:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: scale(1.08);
+    }
+    .sidebar .label {
+      display: none;
+      margin-left: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+    .sidebar:hover {
+      width: 230px;
+    }
+    .sidebar:hover .sidebar-icon {
+      justify-content: flex-start;
+      padding-left: 22px;
+    }
+    .sidebar:hover .label {
+      display: inline;
+    }
+    @media (max-width: 900px) {
+      .sidebar { width: 54px; }
+      .sidebar .logo { width: 36px; height:36px; }
+      .sidebar .sidebar-icon { font-size: 19px; }
+    }
+    /* Topbar */
+    .topbar {
+      position: fixed; left: 80px; right: 0; top: 0; height: 68px;
+      background: linear-gradient(95deg, #e0eaff 0%, #fff 90%);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 36px;
+      z-index: 1;
+      transition: left var(--transition), background var(--transition), border-bottom var(--transition);
+    }
+    .sidebar:hover ~ .topbar { left: 230px; }
+    .topbar .logo { margin-right: 24px;}
+    .topbar .logo img { height: 40px; }
+    .topbar .nav-tabs {
+      display: flex; gap: 0; margin-right: 28px;
+    }
+    .topbar .nav-tab {
+      padding: 9px 24px; border-radius: 10px 10px 0 0;
+      border: none; background: none; font-weight: 600;
+      color: var(--muted); cursor: pointer; font-size: 1.05rem;
+      margin-right: 2px; transition: background var(--transition), color var(--transition);
+    }
+    .topbar .nav-tab.active, .topbar .nav-tab:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .topbar .crypto-prices {
+      display: flex; gap: 16px; align-items: center; font-size: 1rem; margin-right: 16px;
+    }
+    .crypto-price { display: flex; align-items: center; gap:4px;}
+    .crypto-price .crypto-icon {
+      width: 22px; height: 22px; border-radius: 50%; background: orange;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 1rem; margin-right: 4px;
+      transition: background var(--transition);
+    }
+    .crypto-price .price-change.up { color: #16a34a;}
+    .crypto-price .price-change.down { color: #dc2626;}
+    .topbar .create-bot {
+      background: var(--primary); color: #fff; border: none;
+      font-weight: 600; border-radius: 8px; padding: 8px 16px; cursor: pointer;
+      margin-right: 10px; transition: background var(--transition), transform var(--transition);
+    }
+    .topbar .create-bot:hover { background: var(--primary-hover); transform: scale(1.07);}
+    .topbar .notifications {
+      position: relative; margin-right: 8px;
+    }
+    .topbar .bell { font-size: 1.3rem; cursor: pointer; }
+    .topbar .notification-count {
+      position: absolute; top: -7px; right: -7px; background: #dc2626; color: #fff; border-radius: 50%; padding: 2px 7px; font-size: .8rem; font-weight: bold;
+    }
+    .topbar .user-profile {
+      width: 38px; height: 38px; border-radius: 50%; background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 700; color: var(--primary);
+      cursor: pointer; position: relative;
+    }
+    /* MAIN */
+    .main {
+      margin-left: 80px; margin-top: 68px; padding: 32px 32px 18px 32px;
+      overflow-y: auto; height: calc(100vh - 68px); background: var(--bg);
+      transition: margin-left var(--transition);
+    }
+    .sidebar:hover ~ .main { margin-left: 230px; }
+    @media (max-width: 900px) {
+      .main { margin-left: 54px; padding: 13px 2px 6px 8px;}
+      .sidebar:hover ~ .main { margin-left: 230px;}
+    }
+    /* BILLING CARDS */
+    .billing-cards {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      margin: 36px 0;
+      flex-wrap: wrap;
+    }
+    .plan-card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 32px 28px 30px 28px;
+      width: 270px; min-width:220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid transparent;
+      position: relative;
+      transition: box-shadow .15s, border-color .16s;
+    }
+    .plan-card.active {
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px #2563eb22;
+    }
+    .plan-card .plan-title {
+      font-size: 1.27rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .plan-card .plan-price {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+    .plan-card .plan-period {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .plan-card .plan-save {
+      color: var(--primary);
+      font-size: 0.98rem;
+      margin-bottom: 15px;
+    }
+    .plan-card .btn-plan {
+      width: 100%;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 0;
+      margin-bottom: 17px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .18s, color .18s;
+    }
+    .plan-card .btn-plan.active {
+      background: var(--primary);
+      color: #fff;
+      cursor: default;
+    }
+    .plan-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.05rem;
+      width: 100%;
+    }
+    .plan-card ul li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .plan-card ul li i {
+      font-size: 1.15rem;
+      color: var(--primary);
+    }
+    /* Payment Modal */
+    .pay-modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(46,54,85,0.14);
+      align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .pay-modal-bg.active { display: flex; }
+    .pay-modal {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 6px 32px #2563eb22;
+      padding: 32px 38px;
+      min-width: 420px;
+      max-width: 99vw;
+      position: relative;
+      animation: fadeInSection 0.37s cubic-bezier(0.29, 1, 0.49, 1.24);
+    }
+    .pay-modal .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .16s;
+    }
+    .pay-modal .close-btn:hover { color: var(--primary);}
+    .pay-modal .plan-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 13px;
+    }
+    .pay-modal .features-wrap {
+      display: flex; gap: 40px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .pay-modal ul {
+      list-style: none; padding: 0; font-size: 1.01rem;
+    }
+    .pay-modal ul li { margin-bottom: 9px; display: flex; align-items: center; gap: 6px;}
+    .pay-modal ul li i { color: var(--primary);}
+    .pay-modal .duration {
+      margin: 18px 0 17px 0;
+    }
+    .pay-modal .duration label {
+      font-weight: 600;
+      font-size: 1.04rem;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    .pay-modal .duration input[type="radio"] {margin-right:6px;}
+    .pay-modal .price-row {
+      margin: 8px 0 16px 0;
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+    .pay-modal .payment-methods {
+      display: flex; gap: 16px; margin-bottom: 16px;
+    }
+    .pay-modal .pay-btn {
+      display: block;
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 0;
+      font-weight: 700;
+      font-size: 1.13rem;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background .15s;
+    }
+    .pay-modal .pay-btn:hover { background: var(--primary-hover);}
+    .pay-modal .promo-link {
+      color: var(--primary);
+      font-size: .97rem;
+      font-weight: 600;
+      margin: 10px 0;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+    }
+    .pay-modal .checkbox-row {
+      margin: 10px 0;
+      font-size: .99rem;
+    }
+    .pay-modal .payment-methods button {
+      background: none;
+      border: 2px solid var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      border-radius: 7px;
+      padding: 7px 20px;
+      font-size: 1.07rem;
+      cursor: pointer;
+      transition: background .14s, border .15s, color .12s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pay-modal .payment-methods button.active, .pay-modal .payment-methods button:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-hover);
+    }
+    @keyframes fadeInSection { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+    @media (max-width: 600px) {
+      .main {padding:0 2px;}
+      .pay-modal {min-width:95vw;padding:18px 4px;}
+      .billing-cards { gap:6px;}
+    }
+  </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <div class="logo">FH</div>
-        <button class="sidebar-icon active" data-section="dashboard" title="Dashboard">🏠 <span class="label">Dashboard</span></button>
-        <button class="sidebar-icon" data-section="trades" title="Trades">📊 <span class="label">Trades</span></button>
-        <button class="sidebar-icon" data-section="portfolio" title="Portfolio">💼 <span class="label">Portfolio</span></button>
-        <button class="sidebar-icon" data-section="bots-signals" title="My Signals Bots">🤖 <span class="label">My Signals Bots</span></button>
-        <button class="sidebar-icon" data-section="bots-tradingview" title="My TradingView Bots">📈 <span class="label">My TradingView Bots</span></button>
-        <button class="sidebar-icon" data-section="trading-terminal" title="Trading Terminal">🖥️ <span class="label">Trading Terminal</span></button>
-        <button class="sidebar-icon" data-section="marketplace" title="Marketplace">🛒 <span class="label">Marketplace</span></button>
-        <button class="sidebar-icon" data-section="signals" title="Signals">📡 <span class="label">Signals</span></button>
-        <button class="sidebar-icon" data-section="course" title="Curso BTC Esta">📚 <span class="label">Curso BTC Esta</span></button>
-    </nav>
-
-    <!-- Topbar -->
-    <div class="topbar" id="topbar">
-        <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div>
-        <div class="nav-tabs">
-            <button class="nav-tab active">Live Trading</button>
-            <button class="nav-tab">Demo</button>
-        </div>
-        <div class="crypto-prices">
-            <div class="crypto-price" id="btc-price"><div class="crypto-icon">B</div>BTC/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-            <div class="crypto-price" id="eth-price"><div class="crypto-icon">E</div>ETH/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-            <div class="crypto-price" id="ada-price"><div class="crypto-icon">A</div>ADA/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-            <div class="crypto-price" id="not-price"><div class="crypto-icon">N</div>NOT/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-            <div class="crypto-price" id="doge-price"><div class="crypto-icon">D</div>DOGE/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
-        </div>
-        <button class="create-bot">+ Create Bot</button>
-        <div class="notifications">
-            <span class="bell">🔔</span>
-            <span class="notification-count">25</span>
-        </div>
-        <div class="user-profile" tabindex="0">
-            <span>U</span>
-            <div class="settings-dropdown">
-                <button id="theme-toggle">Toggle Dark Mode</button>
-            </div>
-        </div>
+  <!-- Sidebar with professional icons -->
+  <nav class="sidebar" id="sidebar">
+    <div class="logo">FH</div>
+    <button class="sidebar-icon" title="Dashboard"><i class="ri-home-5-line"></i> <span class="label">Dashboard</span></button>
+    <button class="sidebar-icon" title="Trades"><i class="ri-exchange-dollar-line"></i> <span class="label">Trades</span></button>
+    <button class="sidebar-icon" title="Portfolio"><i class="ri-briefcase-4-line"></i> <span class="label">Portfolio</span></button>
+    <button class="sidebar-icon" title="Bots"><i class="ri-robot-2-line"></i> <span class="label">Bots</span></button>
+    <button class="sidebar-icon" title="Grid"><i class="ri-grid-line"></i> <span class="label">Grid</span></button>
+    <button class="sidebar-icon" title="TradingView"><i class="ri-bar-chart-grouped-line"></i> <span class="label">TradingView</span></button>
+    <button class="sidebar-icon" title="Billing" style="color:var(--primary);" tabindex="0"><i class="ri-money-dollar-circle-line"></i> <span class="label">Billing</span></button>
+    <button class="sidebar-icon" title="Signals"><i class="ri-broadcast-line"></i> <span class="label">Signals</span></button>
+    <button class="sidebar-icon" title="Settings"><i class="ri-settings-3-line"></i> <span class="label">Settings</span></button>
+  </nav>
+  <!-- Topbar -->
+  <div class="topbar" id="topbar">
+    <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active">Live Trading</button>
+      <button class="nav-tab">Demo</button>
     </div>
-
-    <!-- Main Content -->
-    <main class="main" id="main">
-        <div class="upgrade-banner">
-            Estás usando el Free Package. ¡Mejora ahora para más ventajas! <a href="#" class="upgrade-button">Upgrade</a>
+    <div class="crypto-prices">
+      <div class="crypto-price" id="btc-price"><div class="crypto-icon"><i class="ri-bit-coin-line"></i></div>BTC/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" id="eth-price"><div class="crypto-icon" style="background:#888;"><i class="ri-ethereum-line"></i></div>ETH/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" id="ada-price"><div class="crypto-icon" style="background:#2e9fff;">A</div>ADA/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" id="not-price"><div class="crypto-icon" style="background:#666;">N</div>NOT/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+      <div class="crypto-price" id="doge-price"><div class="crypto-icon" style="background:#e6b800;"><i class="ri-doge-line"></i></div>DOGE/USDT <span class="price">$--</span> <span class="price-change">--% --</span></div>
+    </div>
+    <button class="create-bot">+ Create Bot</button>
+    <div class="notifications">
+      <span class="bell"><i class="ri-notification-3-line"></i></span>
+      <span class="notification-count">25</span>
+    </div>
+    <div class="user-profile" tabindex="0">
+      <i class="ri-user-3-line"></i>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <main class="main" id="main">
+    <h2 style="font-size:2rem;font-weight:800;margin-bottom:0;">Billing</h2>
+    <div class="nav-tabs" style="margin-bottom:0;">
+      <button class="nav-tab active">Live Trading</button>
+      <button class="nav-tab">Demo</button>
+    </div>
+    <div class="billing-cards">
+      <!-- Free Plan -->
+      <div class="plan-card active" data-plan="free">
+        <div class="plan-title">Free</div>
+        <div class="plan-price">$0 <span class="plan-period">/ month</span></div>
+        <div class="plan-save" style="color:#8391ad;">No Cost</div>
+        <button class="btn-plan active">Active</button>
+        <ul>
+          <li><i class="ri-check-line"></i>3 Active Manual Trades</li>
+          <li><i class="ri-check-line"></i>3 Active Signal Trades</li>
+          <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
+          <li><i class="ri-check-line"></i>1 Active Grid Bot</li>
+          <li><i class="ri-check-line"></i>1 Active DCA Bot</li>
+          <li><i class="ri-check-line"></i>1 Active TradingView Bot</li>
+          <li><i class="ri-check-line"></i>1 Monthly Backtesting Run</li>
+          <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
+        </ul>
+      </div>
+      <!-- Starter Plan -->
+      <div class="plan-card" data-plan="starter">
+        <div class="plan-title">Starter</div>
+        <div class="plan-price">$19.99 <span class="plan-period">/ month</span></div>
+        <div class="plan-save">You save $118.9 a year</div>
+        <button class="btn-plan">Upgrade</button>
+        <ul>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+          <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
+          <li><i class="ri-check-line"></i>2 Active Grid Bots</li>
+          <li><i class="ri-check-line"></i>2 Active DCA Bots</li>
+          <li><i class="ri-check-line"></i>2 Active TradingView Bots</li>
+          <li><i class="ri-check-line"></i>10 Monthly Backtesting Runs</li>
+          <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
+        </ul>
+      </div>
+      <!-- Advanced Plan -->
+      <div class="plan-card" data-plan="advanced">
+        <div class="plan-title">Advanced</div>
+        <div class="plan-price">$32.99 <span class="plan-period">/ month</span></div>
+        <div class="plan-save">You save $202.9 a year</div>
+        <button class="btn-plan">Upgrade</button>
+        <ul>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+          <li><i class="ri-check-line"></i>3 Active Signals Bots</li>
+          <li><i class="ri-check-line"></i>5 Active Grid Bots</li>
+          <li><i class="ri-check-line"></i>5 Active DCA Bots</li>
+          <li><i class="ri-check-line"></i>5 Active TradingView Bots</li>
+          <li><i class="ri-check-line"></i>50 Monthly Backtesting Runs</li>
+          <li><i class="ri-information-line" title="Primary API Slot"></i>2 Primary API Slots</li>
+        </ul>
+      </div>
+      <!-- Premium Plan -->
+      <div class="plan-card" data-plan="premium">
+        <div class="plan-title">Premium</div>
+        <div class="plan-price">$52.99 <span class="plan-period">/ month</span></div>
+        <div class="plan-save">You save $322.9 a year</div>
+        <button class="btn-plan">Upgrade</button>
+        <ul>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signals Bots</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Grid Bots</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active DCA Bots</li>
+          <li><i class="ri-check-line"></i><b>Unlimited</b> Active TradingView Bots</li>
+          <li><i class="ri-check-line"></i>250 Monthly Backtesting Runs</li>
+          <li><i class="ri-information-line" title="Primary API Slot"></i>5 Primary API Slots</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Payment Modal -->
+    <div class="pay-modal-bg" id="pay-modal-bg">
+      <div class="pay-modal" id="pay-modal">
+        <button class="close-btn" id="close-pay-modal" title="Close">&times;</button>
+        <div class="plan-title" id="modal-plan-title"></div>
+        <div class="features-wrap" id="modal-plan-features"></div>
+        <div class="duration">
+          <label><input type="radio" name="duration" value="annually" checked>Annually <span style="background:#e0eaff;color:#2563eb;font-size:.97em;padding:2px 6px;border-radius:6px;margin-left:5px;">SAVE 33%</span></label>
+          <label><input type="radio" name="duration" value="monthly">Monthly</label>
         </div>
-
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="section dashboard-content active">
-            <h2>Dashboard</h2>
-            <p>Open Trades: 0 hot trades (out of 0)</p>
-            <div style="text-align: center; margin: 18px 0 26px 0;">
-                <span style="font-size: 48px; color: #ccc;">↓</span>
-                <p>No open trades</p>
-                <button class="create-bot">Create Trade</button>
-            </div>
-            <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
-                <div class="stat-card"><h3>Open Trades</h3><p>0</p></div>
-                <div class="stat-card"><h3>Amount in Open Trades</h3><p>0</p></div>
-                <div class="stat-card"><h3>PnL in Open Trades</h3><p>0</p></div>
-                <div class="stat-card"><h3>Potential Profit</h3><p>0</p></div>
-            </div>
-            <div class="chart-container"><canvas id="dashboard-overview-chart"></canvas></div>
-        </section>
-
-        <!-- Trades Section -->
-        <section id="trades" class="section trades-content">
-            <h2>Trades</h2>
-            <div class="nav-tabs">
-                <button class="nav-tab active">Open</button>
-                <button class="nav-tab">Closed</button>
-            </div>
-            <div style="display: flex; gap:18px;">
-                <div style="flex: 1;">
-                    <h3>Trades Amount Allocation</h3>
-                    <div class="chart-container"><canvas id="trades-allocation-chart"></canvas></div>
-                    <p>Total $0</p>
-                </div>
-                <div style="flex: 1;">
-                    <h3>Number of Trades</h3>
-                    <div class="chart-container"><canvas id="trades-number-chart"></canvas></div>
-                    <p>No data collected</p>
-                </div>
-            </div>
-            <table>
-                <thead>
-                    <tr><th>Trade ID</th><th>Symbol</th><th>Amount</th><th>Status</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>001</td><td>BTC/USDT</td><td>$100</td><td>Open</td></tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Portfolio Section -->
-        <section id="portfolio" class="section portfolio-content">
-            <h2>Portfolio</h2>
-            <div style="display: flex; gap:18px;">
-                <div style="flex: 1;">
-                    <h3>Accounts Allocation</h3>
-                    <div class="chart-container"><canvas id="portfolio-allocation-chart"></canvas></div>
-                    <p>Total $95.33</p>
-                </div>
-                <div style="flex: 1;">
-                    <h3>Portfolio Change</h3>
-                    <div class="chart-container"><canvas id="portfolio-change-chart"></canvas></div>
-                    <p>No data collected</p>
-                </div>
-            </div>
-            <ul>
-                <li>My Bitget-Futures-8D21</li>
-                <li>My Bitget-Spot-8D21</li>
-            </ul>
-            <div class="chart-container"><canvas id="portfolio-asset-chart"></canvas></div>
-        </section>
-
-        <!-- My Signals Bots Section -->
-        <section id="bots-signals" class="section bots-signals-content">
-            <h2>My Signals Bots</h2>
-            <div class="stat-card" style="padding: 20px 14px 22px 14px;">
-                <h3>¡Bienvenido a Signals Bots!</h3>
-                <p>Auto trading avanzado, estrategias flexibles y facilidad de uso. Sigue a expertos o diseña tu propio bot sin complicaciones.</p>
-                <button style="margin-right:7px;">Ver Video</button>
-                <button>Aprender Más</button>
-            </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
-                <div class="info-card">
-                    <h4>¿Qué es el Signals Bot?</h4>
-                    <p>Bot de señales cripto avanzado, fácil de usar y seguro.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-                <div class="info-card">
-                    <h4>Guía de Uso</h4>
-                    <p>Crea tu Signals Bot en solo 2 pasos y automatiza tu trading.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-                <div class="info-card">
-                    <h4>Ajustes Avanzados</h4>
-                    <p>Para usuarios avanzados: control total de la configuración de tu bot.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-            </div>
-            <button class="create-bot">Create Signals Bot</button>
-        </section>
-
-        <!-- My TradingView Bots Section -->
-        <section id="bots-tradingview" class="section bots-tradingview-content">
-            <h2>My TradingView Bots</h2>
-            <div class="stat-card" style="padding: 20px 14px 22px 14px;">
-                <h3>¡Bienvenido a TradingView Bots!</h3>
-                <p>Automatiza tus estrategias de TradingView y ejecuta señales Pine-Script.</p>
-                <button style="margin-right:7px;">Ver Video</button>
-                <button>Aprender Más</button>
-            </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
-                <div class="info-card">
-                    <h4>¿Qué es el TradingView Bot?</h4>
-                    <p>Automatización avanzada con TradingView y ejecución de señales.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-                <div class="info-card">
-                    <h4>Crear un TV Bot</h4>
-                    <p>Crea estrategias y conecta alertas de TradingView fácilmente.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-                <div class="info-card">
-                    <h4>Conectar Alertas</h4>
-                    <p>Conexión fácil mediante Webhook URL y PineScript.</p>
-                    <a href="#">Leer Más</a>
-                </div>
-            </div>
-            <button class="create-bot">Create TradingView Bot</button>
-        </section>
-
-        <!-- Trading Terminal Section -->
-        <section id="trading-terminal" class="section trading-terminal-content">
-            <h2>Trading Terminal</h2>
-            <div class="nav-tabs">
-                <button class="nav-tab active">General</button>
-                <button class="nav-tab">Entries</button>
-                <button class="nav-tab">Take-Profits</button>
-                <button class="nav-tab">Stop</button>
-            </div>
-            <form>
-                <label>Account</label>
-                <select><option>My-Bitget-Spot-8D21</option></select>
-                <label>Symbol</label>
-                <input type="text" value="BTC/USDT">
-                <label>New Amount (USDT)</label>
-                <input type="text">
-                <label>Available Amount</label>
-                <p>27.269 USDT (27.26 USD)</p>
-                <label>Trade Amount</label>
-                <input type="text" value="5.03 USDT (5.03 USD)">
-                <button type="submit">Create Trade</button>
-            </form>
-        </section>
-
-        <!-- Marketplace Section -->
-        <section id="marketplace" class="section marketplace-content">
-            <h2>Marketplace</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
-                <div class="bot-card">
-                    <h3>The MARTINGALE Bot</h3>
-                    <p>★★★★☆ (4.2)</p>
-                    <p>PnL (6M): 109.69% ↑</p>
-                    <p>PnL (3M): 67.68% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 50%, yellow 50% 75%, red 75% 100%);"></div>
-                    <p>Medium Risk</p>
-                    <button>Free Trial $ $ $</button>
-                </div>
-                <div class="bot-card">
-                    <h3>Crypto Dreams</h3>
-                    <p>Not enough reviews</p>
-                    <p>PnL (6M): 95.56% ↑</p>
-                    <p>PnL (3M): 42.49% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 80%, yellow 80% 90%, red 90% 100%);"></div>
-                    <p>Low Risk</p>
-                    <button>Free Trial $ $ $</button>
-                </div>
-                <div class="bot-card">
-                    <h3>GreenCrypto Swing</h3>
-                    <p>Not enough reviews</p>
-                    <p>PnL (6M): 51.92% ↑</p>
-                    <p>PnL (3M): 15.77% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 90%, yellow 90% 95%, red 95% 100%);"></div>
-                    <p>Low Risk</p>
-                    <button>Free Trial $ $ $</button>
-                </div>
-                <div class="bot-card">
-                    <h3>Solana Scalper</h3>
-                    <p>Not enough reviews</p>
-                    <p>PnL (6M): 70.64% ↑</p>
-                    <p>PnL (3M): 39.63% ↑</p>
-                    <div class="gauge" style="background: conic-gradient(green 0% 85%, yellow 85% 92%, red 92% 100%);"></div>
-                    <p>Low Risk</p>
-                    <button>Free Trial $ $ $</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Signals Section -->
-        <section id="signals" class="section signals-content">
-            <h2>Signals</h2>
-            <div class="nav-tabs">
-                <button class="nav-tab active">Open</button>
-                <button class="nav-tab">Closed</button>
-            </div>
-            <input type="text" placeholder="Search...">
-            <table>
-                <thead>
-                    <tr><th>Symbol</th><th>Exchanges</th><th>Price</th><th>Profit</th><th>Last Updated</th><th>Actions</th><th>Groups</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>BTC/USDT</td><td>Bitget</td><td>$112,000</td><td>2.5%</td><td>5 min ago</td><td><button>View</button></td><td>Group 1</td></tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Curso BTC Esta Section -->
-        <section id="course" class="section course-content">
-            <h2>Curso BTC Esta</h2>
-            <p>Para acceder al curso, completa todas las tareas sociales y responde correctamente al cuestionario sobre BTC. Una vez completado, se revelará el enlace de Telegram.</p>
-            <h3>Tareas Sociales</h3>
-            <ul class="social-list">
-                <li class="social-item"><input type="checkbox" class="follow-check" data-social="x"> Sigue en X: <a href="https://x.com/financialharmon" target="_blank" class="social-link">@financialharmon</a></li>
-                <li class="social-item"><input type="checkbox" class="follow-check" data-social="youtube"> Sigue en YouTube: <a href="https://www.youtube.com/@FinancialHarmony-z1n" target="_blank" class="social-link">@FinancialHarmony-z1n</a></li>
-                <li class="social-item"><input type="checkbox" class="follow-check" data-social="instagram"> Sigue en Instagram: <a href="https://www.instagram.com/jrfinancialharmony" target="_blank" class="social-link">jrfinancialharmony</a></li>
-                <li class="social-item"><input type="checkbox" class="follow-check" data-social="tiktok"> Sigue en TikTok: <a href="https://www.tiktok.com/@financial.harmony0" target="_blank" class="social-link">financial.harmony0</a></li>
-                <li class="social-item"><input type="checkbox" class="follow-check" data-social="extra"> Suscríbete al newsletter: <a href="#" target="_blank" class="social-link">Newsletter Link</a></li>
-            </ul>
-            <h3>Cuestionario BTC</h3>
-            <div class="quiz-question"><p>1. ¿Qué significa BTC?</p>
-                <label class="quiz-option"><input type="radio" name="q1" value="a"> a) Bitcoin</label>
-                <label class="quiz-option"><input type="radio" name="q1" value="b"> b) Bytecoin</label>
-                <label class="quiz-option"><input type="radio" name="q1" value="c"> c) Bitcash</label>
-            </div>
-            <div class="quiz-question"><p>2. ¿Quién creó Bitcoin?</p>
-                <label class="quiz-option"><input type="radio" name="q2" value="a"> a) Elon Musk</label>
-                <label class="quiz-option"><input type="radio" name="q2" value="b"> b) Satoshi Nakamoto</label>
-                <label class="quiz-option"><input type="radio" name="q2" value="c"> c) Vitalik Buterin</label>
-            </div>
-            <div class="quiz-question"><p>3. ¿Cuál es el suministro máximo de BTC?</p>
-                <label class="quiz-option"><input type="radio" name="q3" value="a"> a) 21 millones</label>
-                <label class="quiz-option"><input type="radio" name="q3" value="b"> b) Ilimitado</label>
-                <label class="quiz-option"><input type="radio" name="q3" value="c"> c) 100 millones</label>
-            </div>
-            <div class="quiz-question"><p>4. ¿Qué es el halving de Bitcoin?</p>
-                <label class="quiz-option"><input type="radio" name="q4" value="a"> a) Reducción a la mitad de la recompensa por minado</label>
-                <label class="quiz-option"><input type="radio" name="q4" value="b"> b) Duplicación del suministro</label>
-                <label class="quiz-option"><input type="radio" name="q4" value="c"> c) Cambio en el algoritmo</label>
-            </div>
-            <div class="quiz-question"><p>5. ¿Bitcoin es descentralizado?</p>
-                <label class="quiz-option"><input type="radio" name="q5" value="a"> a) Sí</label>
-                <label class="quiz-option"><input type="radio" name="q5" value="b"> b) No</label>
-            </div>
-            <button id="verify-quiz">Verificar y Revelar Enlace</button>
-            <div id="telegram-link" style="display:none;">
-                <p>¡Felicidades! Has completado las tareas y el cuestionario. Únete al grupo de Telegram para el curso: <a href="https://t.me/+k6JRjS5U9vY3Yjg0" target="_blank">Inicia en Crypto con Armonía</a></p>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        // Sidebar Navigation
-        document.querySelectorAll('.sidebar-icon').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.sidebar-icon').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                let sec = btn.dataset.section;
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                document.getElementById(sec).classList.add('active');
-            });
+        <div class="price-row" id="modal-plan-price"></div>
+        <div class="payment-methods">
+          <button type="button" class="active" data-method="paypal"><i class="ri-paypal-fill"></i> PayPal</button>
+          <button type="button" data-method="credit-card"><i class="ri-bank-card-line"></i> Credit Card</button>
+          <button type="button" data-method="crypto"><i class="ri-coins-line"></i> Crypto</button>
+        </div>
+        <div style="font-size:.97em; color:var(--muted);margin-bottom:12px;">
+          Your plan will start today and will auto-renew on the same date next year or month.
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="authorize" /> I authorize Financial Harmony to charge me automatically every period until I cancel my subscription.
+        </div>
+        <button class="promo-link" onclick="alert('Promo feature not implemented')">+ Add Promo Code</button>
+        <button class="pay-btn" id="pay-btn">Pay Now</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Fetch Crypto Prices
+    function updateCryptoPrices() {
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
+        .then(r => r.json())
+        .then(data => {
+          function setPrice(id, coin) {
+            let el = document.getElementById(id + '-price');
+            if(!el) return;
+            let price = data[coin]?.usd?.toFixed(2) ?? '--';
+            let change = data[coin]?.usd_24h_change?.toFixed(2) ?? '--';
+            let dir = change > 0 ? '▲' : '▼';
+            let cls = change > 0 ? 'up' : 'down';
+            el.querySelector('.price').textContent = `$${price}`;
+            el.querySelector('.price-change').textContent = `${change}% ${dir}`;
+            el.querySelector('.price-change').className = `price-change ${cls}`;
+          }
+          setPrice('btc','bitcoin');
+          setPrice('eth','ethereum');
+          setPrice('ada','cardano');
+          setPrice('not','notcoin');
+          setPrice('doge','dogecoin');
         });
+    }
+    updateCryptoPrices();
+    setInterval(updateCryptoPrices, 30000);
 
-        // Topbar Nav Tabs
-        document.querySelectorAll('.nav-tabs .nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                tab.parentElement.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-            });
-        });
+    // Billing Modal Logic
+    const plansData = {
+      starter: {
+        title: 'Starter plan',
+        features: [
+          '<b>Unlimited</b> Active Manual Trades',
+          '1 Active Signals Bot',
+          '2 Active DCA Bots',
+          '10 Monthly Backtesting Runs',
+          '<b>Unlimited</b> Active Signal Trades',
+          '2 Active Grid Bots',
+          '2 Active TradingView Bots',
+          '1 Primary API Slot'
+        ],
+        price: { yearly: 239.9, monthly: 19.99, save: 118.9, old: 29.9 },
+      },
+      advanced: {
+        title: 'Advanced plan',
+        features: [
+          '<b>Unlimited</b> Active Manual Trades',
+          '3 Active Signals Bots',
+          '5 Active DCA Bots',
+          '50 Monthly Backtesting Runs',
+          '<b>Unlimited</b> Active Signal Trades',
+          '5 Active Grid Bots',
+          '5 Active TradingView Bots',
+          '2 Primary API Slots'
+        ],
+        price: { yearly: 329.9, monthly: 32.99, save: 202.9, old: 49.9 },
+      },
+      premium: {
+        title: 'Premium plan',
+        features: [
+          '<b>Unlimited</b> Active Manual Trades',
+          '<b>Unlimited</b> Active Signals Bots',
+          '<b>Unlimited</b> Active DCA Bots',
+          '250 Monthly Backtesting Runs',
+          '<b>Unlimited</b> Active Signal Trades',
+          '<b>Unlimited</b> Active Grid Bots',
+          '<b>Unlimited</b> Active TradingView Bots',
+          '5 Primary API Slots'
+        ],
+        price: { yearly: 529.9, monthly: 52.99, save: 322.9, old: 79.9 },
+      }
+    };
+    // Plans click
+    document.querySelectorAll('.plan-card:not(.active) .btn-plan').forEach(btn => {
+      btn.addEventListener('click', function(e){
+        const planType = btn.closest('.plan-card').dataset.plan;
+        openPayModal(planType);
+      });
+    });
 
-        // User Profile Dropdown
-        const userProfile = document.querySelector('.user-profile');
-        const settingsDropdown = document.querySelector('.settings-dropdown');
-        userProfile.addEventListener('click', (e) => {
-            e.stopPropagation();
-            settingsDropdown.style.display = settingsDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-        document.body.addEventListener('click', e => {
-            if(!userProfile.contains(e.target)) settingsDropdown.style.display = 'none';
-        });
-
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            themeToggle.textContent = document.body.classList.contains('dark') ? 'Switch to Light Mode' : 'Toggle Dark Mode';
-        });
-
-        // Fetch Crypto Prices
-        function updateCryptoPrices() {
-            fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
-                .then(r => r.json())
-                .then(data => {
-                    function setPrice(id, coin) {
-                        let el = document.getElementById(id + '-price');
-                        if(!el) return;
-                        let price = data[coin]?.usd?.toFixed(2) ?? '--';
-                        let change = data[coin]?.usd_24h_change?.toFixed(2) ?? '--';
-                        let dir = change > 0 ? '▲' : '▼';
-                        let cls = change > 0 ? 'up' : 'down';
-                        el.querySelector('.price').textContent = `$${price}`;
-                        el.querySelector('.price-change').textContent = `${change}% ${dir}`;
-                        el.querySelector('.price-change').className = `price-change ${cls}`;
-                    }
-                    setPrice('btc','bitcoin');
-                    setPrice('eth','ethereum');
-                    setPrice('ada','cardano');
-                    setPrice('not','notcoin');
-                    setPrice('doge','dogecoin');
-                });
+    function openPayModal(planType) {
+      const data = plansData[planType];
+      document.getElementById('modal-plan-title').innerText = data.title;
+      // Features
+      const featuresHtml = `
+        <ul>
+          ${data.features.map(f=>`<li><i class="ri-check-line"></i> ${f}</li>`).join('')}
+        </ul>
+      `;
+      document.getElementById('modal-plan-features').innerHTML = featuresHtml;
+      // Prices
+      const priceDiv = document.getElementById('modal-plan-price');
+      function setPrice(duration) {
+        if(duration==='annually') {
+          priceDiv.innerHTML = `<span style="text-decoration:line-through;color:#aaa;">$${(data.price.old*12).toFixed(1)}</span>
+            <b style="font-size:1.5em;color:var(--primary);">$${data.price.monthly.toFixed(2)}</b> <span>/ month</span>
+            <br><span style="color:var(--primary);font-size:.97em;">Save $${data.price.save} compared to the monthly plan. ($${data.price.yearly.toFixed(2)}/year)</span>`;
+        } else {
+          priceDiv.innerHTML = `<b style="font-size:1.5em;color:var(--primary);">$${data.price.monthly.toFixed(2)}</b> <span>/ month</span>`;
         }
-        updateCryptoPrices();
-        setInterval(updateCryptoPrices, 30000);
-
-        // Charts
-        new Chart(document.getElementById('dashboard-overview-chart'), {
-            type: 'line',
-            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{ label: 'Performance', data: [0, 10, 5, 15, 10, 20], borderColor: '#2563eb', fill: false }]},
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-        new Chart(document.getElementById('trades-allocation-chart'), {
-            type: 'doughnut',
-            data: { labels: ['BTC', 'ETH', 'Others'],
-                datasets: [{ data: [40, 30, 30], backgroundColor: ['#2563eb', '#60a5fa', '#ccc'] }]},
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-        new Chart(document.getElementById('trades-number-chart'), {
-            type: 'bar',
-            data: { labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Trades', data: [5, 10, 15, 20, 25, 30], backgroundColor: '#2563eb' }] },
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-        new Chart(document.getElementById('portfolio-allocation-chart'), {
-            type: 'doughnut',
-            data: { labels: ['Bitget Futures', 'Bitget Spot'],
-                datasets: [{ data: [60, 40], backgroundColor: ['#2563eb', '#60a5fa'] }]},
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-        new Chart(document.getElementById('portfolio-change-chart'), {
-            type: 'bar',
-            data: { labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'Change', data: [2, 5, -1, 10, 8, 15], backgroundColor: '#60a5fa' }]},
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-        new Chart(document.getElementById('portfolio-asset-chart'), {
-            type: 'line',
-            data: { labels: ['1h', '1d', '1w', '1m', '3m', '1y'],
-                datasets: [{ label: 'BTC/USDT', data: [110000, 112000, 115000, 120000, 118000, 125000], borderColor: '#2563eb', fill: false }]},
-            options: { responsive: true, plugins:{legend:{display:false}} }
-        });
-
-        // Curso BTC Esta Verification
-        const followChecks = document.querySelectorAll('.follow-check');
-        const verifyButton = document.getElementById('verify-quiz');
-        const telegramLink = document.getElementById('telegram-link');
-        verifyButton.addEventListener('click', () => {
-            const allFollowed = Array.from(followChecks).every(c => c.checked);
-            const q1 = document.querySelector('input[name="q1"]:checked')?.value === 'a';
-            const q2 = document.querySelector('input[name="q2"]:checked')?.value === 'b';
-            const q3 = document.querySelector('input[name="q3"]:checked')?.value === 'a';
-            const q4 = document.querySelector('input[name="q4"]:checked')?.value === 'a';
-            const q5 = document.querySelector('input[name="q5"]:checked')?.value === 'a';
-            if (allFollowed && q1 && q2 && q3 && q4 && q5)
-                telegramLink.style.display = 'block';
-            else
-                alert('Por favor, completa todas las tareas y responde correctamente al cuestionario.');
-        });
-    </script>
+      }
+      setPrice('annually');
+      // Duration
+      document.querySelectorAll('input[name="duration"]').forEach(radio => {
+        radio.checked = radio.value === 'annually';
+        radio.onchange = () => setPrice(radio.value);
+      });
+      // Payment methods
+      document.querySelectorAll('.pay-modal .payment-methods button').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.dataset.method==='paypal') btn.classList.add('active');
+        btn.onclick = () => {
+          document.querySelectorAll('.pay-modal .payment-methods button').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+      });
+      // Checkbox
+      document.getElementById('authorize').checked = false;
+      // Show modal
+      document.getElementById('pay-modal-bg').classList.add('active');
+    }
+    document.getElementById('close-pay-modal').onclick = () => {
+      document.getElementById('pay-modal-bg').classList.remove('active');
+    };
+    // Pay Now
+    document.getElementById('pay-btn').onclick = () => {
+      if(!document.getElementById('authorize').checked) {
+        alert('You must authorize the auto-renewal to continue.');
+        return;
+      }
+      alert('Payment flow not implemented in demo.');
+      document.getElementById('pay-modal-bg').classList.remove('active');
+    };
+    // Modal close on outside click
+    document.getElementById('pay-modal-bg').onclick = (e) => {
+      if(e.target===document.getElementById('pay-modal-bg')) document.getElementById('pay-modal-bg').classList.remove('active');
+    };
+  </script>
 </body>
 </html>
