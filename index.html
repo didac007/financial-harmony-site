@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Financial Harmony - Billing</title>
+  <title>Financial Harmony Dashboard</title>
+  <!-- Favicon/logo -->
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/didac007/financial-harmony-site@main/logo-fh.png" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
-  <!-- Icon library for professional sidebar icons (RemixIcon) -->
+  <!-- RemixIcon for pro icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --primary: #2563eb;
@@ -41,22 +44,26 @@
       flex-direction: column;
       align-items: center;
       padding: 24px 0;
-      gap: 8px;
+      gap: 4px;
       z-index: 2;
       position: fixed;
       height: 100vh;
       transition: width var(--transition), background var(--transition);
     }
     .sidebar .logo {
-      width: 48px; height: 48px;
+      width: 56px; height: 56px;
       background: var(--primary-light);
-      border-radius: 50%;
+      border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: bold;
-      color: var(--primary);
-      font-size: 1.5rem;
-      letter-spacing: 1px;
       margin-bottom: 18px;
+      padding: 0;
+      border: 2px solid var(--primary);
+      overflow: hidden;
+    }
+    .sidebar .logo img {
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 12px;
+      background: #fff;
     }
     .sidebar .sidebar-icon {
       width: 100%;
@@ -71,10 +78,11 @@
       font-size: 22px;
       cursor: pointer;
       border-radius: 12px;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       transition: background var(--transition), color var(--transition), transform var(--transition);
       position: relative;
       outline: none;
+      font-family: inherit;
     }
     .sidebar .sidebar-icon.active,
     .sidebar .sidebar-icon:hover {
@@ -115,8 +123,12 @@
       transition: left var(--transition), background var(--transition), border-bottom var(--transition);
     }
     .sidebar:hover ~ .topbar { left: 230px; }
-    .topbar .logo { margin-right: 24px;}
-    .topbar .logo img { height: 40px; }
+    .topbar .logo-txt {
+      margin-right: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .topbar .logo-txt img { height: 42px; border-radius: 12px;}
+    .topbar .logo-txt span { font-weight: 900; font-size: 1.4rem; letter-spacing: 1px;}
     .topbar .nav-tabs {
       display: flex; gap: 0; margin-right: 28px;
     }
@@ -165,230 +177,126 @@
       margin-left: 80px; margin-top: 68px; padding: 32px 32px 18px 32px;
       overflow-y: auto; height: calc(100vh - 68px); background: var(--bg);
       transition: margin-left var(--transition);
+      position: relative;
+      z-index: 0;
     }
     .sidebar:hover ~ .main { margin-left: 230px; }
     @media (max-width: 900px) {
       .main { margin-left: 54px; padding: 13px 2px 6px 8px;}
       .sidebar:hover ~ .main { margin-left: 230px;}
     }
-    /* BILLING CARDS */
-    .billing-cards {
-      display: flex;
-      gap: 28px;
-      justify-content: center;
-      margin: 36px 0;
-      flex-wrap: wrap;
-    }
-    .plan-card {
-      background: var(--card);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 32px 28px 30px 28px;
-      width: 270px; min-width:220px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border: 2px solid transparent;
-      position: relative;
-      transition: box-shadow .15s, border-color .16s;
-    }
-    .plan-card.active {
-      border-color: var(--primary);
-      box-shadow: 0 4px 16px #2563eb22;
-    }
-    .plan-card .plan-title {
-      font-size: 1.27rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .plan-card .plan-price {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin: 0 0 4px 0;
-    }
-    .plan-card .plan-period {
-      font-size: 1.1rem;
-      font-weight: 400;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .plan-card .plan-save {
-      color: var(--primary);
-      font-size: 0.98rem;
-      margin-bottom: 15px;
-    }
-    .plan-card .btn-plan {
-      width: 100%;
-      background: var(--primary-light);
-      color: var(--primary);
-      border: none;
-      border-radius: 10px;
-      padding: 9px 0;
-      margin-bottom: 17px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background .18s, color .18s;
-    }
-    .plan-card .btn-plan.active {
+    .section { display: none; }
+    .section.active { display: block; animation: fadeInSection 0.5s cubic-bezier(0.29, 1, 0.49, 1.24);}
+    @keyframes fadeInSection { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+    /* Help Panel */
+    .help-float-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 36px;
+      width: 65px;
+      height: 65px;
       background: var(--primary);
       color: #fff;
-      cursor: default;
-    }
-    .plan-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 1.05rem;
-      width: 100%;
-    }
-    .plan-card ul li {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .plan-card ul li i {
-      font-size: 1.15rem;
-      color: var(--primary);
-    }
-    /* Payment Modal */
-    .pay-modal-bg {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(46,54,85,0.14);
-      align-items: center; justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 23px #2563eb33;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      cursor: pointer;
+      z-index: 1001;
       transition: background .2s;
     }
-    .pay-modal-bg.active { display: flex; }
-    .pay-modal {
-      background: var(--card);
-      border-radius: 20px;
-      box-shadow: 0 6px 32px #2563eb22;
-      padding: 32px 38px;
-      min-width: 420px;
-      max-width: 99vw;
-      position: relative;
-      animation: fadeInSection 0.37s cubic-bezier(0.29, 1, 0.49, 1.24);
+    .help-float-btn:hover { background: var(--primary-hover);}
+    .help-panel-bg {
+      display: none;
+      position: fixed; z-index: 2000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(30,37,53,0.13);
+      align-items: flex-end; justify-content: flex-end;
     }
-    .pay-modal .close-btn {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--muted);
-      cursor: pointer;
+    .help-panel-bg.active { display: flex;}
+    .help-panel {
+      background: linear-gradient(160deg,#228be6 60%,#fff 120%);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 4px 38px #2563eb22;
+      width: 370px; max-width:95vw;
+      min-height: 420px;
+      padding: 0 0 18px 0;
+      margin: 0 36px 36px 0;
+      position: relative;
+      animation: fadeInSection .42s;
+      display: flex; flex-direction: column;
+    }
+    .help-header {
+      display: flex; align-items: flex-start; gap: 7px; padding: 18px 18px 0 18px;
+    }
+    .help-header .help-agents { display: flex; gap: -8px;}
+    .help-header .help-agent {
+      width: 38px; height: 38px; border-radius: 50%; border: 3px solid #fff;
+      background: #f1f5f9; object-fit: cover; margin-right: -10px;
+    }
+    .help-header .close-btn {
+      margin-left: auto; background: none; border: none; color: #fff;
+      font-size: 1.7em; cursor: pointer;
+    }
+    .help-panel-content {
+      padding: 0 18px 0 18px;
+    }
+    .help-panel-content h2 {
+      font-size: 1.45em; font-weight: 800; margin: 10px 0 6px 0; color: #fff;
+    }
+    .help-panel-content p { font-size: 1.13em; color: #fff; margin-bottom: 15px;}
+    .help-panel-content .search-box { margin-bottom: 14px;}
+    .help-panel-content input[type="search"] {
+      width: 100%; border-radius: 10px; border: none; padding: 8px 12px; font-size: 1.07em; margin-top: 7px;
+    }
+    .help-links-list { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 8px 0 2px 0; margin-bottom: 8px;}
+    .help-link-item { padding: 10px 19px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 1.07em;}
+    .help-link-item:last-child{ border-bottom: none;}
+    .help-link-item:hover { background: #e0eaff;}
+    .help-bottom-bar {
+      display: flex; justify-content: space-around; align-items: center;
+      background: #fff; border-radius: 0 0 22px 22px; padding: 10px 0; margin-top: 10px;
+    }
+    .help-bottom-bar button {
+      background: none; border: none; color: var(--primary); font-weight: 700;
+      font-size: 1.15em; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px;
       transition: color .16s;
     }
-    .pay-modal .close-btn:hover { color: var(--primary);}
-    .pay-modal .plan-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 13px;
-    }
-    .pay-modal .features-wrap {
-      display: flex; gap: 40px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
-    }
-    .pay-modal ul {
-      list-style: none; padding: 0; font-size: 1.01rem;
-    }
-    .pay-modal ul li { margin-bottom: 9px; display: flex; align-items: center; gap: 6px;}
-    .pay-modal ul li i { color: var(--primary);}
-    .pay-modal .duration {
-      margin: 18px 0 17px 0;
-    }
-    .pay-modal .duration label {
-      font-weight: 600;
-      font-size: 1.04rem;
-      margin-right: 20px;
-      cursor: pointer;
-    }
-    .pay-modal .duration input[type="radio"] {margin-right:6px;}
-    .pay-modal .price-row {
-      margin: 8px 0 16px 0;
-      font-size: 1.1rem;
-      color: var(--primary);
-    }
-    .pay-modal .payment-methods {
-      display: flex; gap: 16px; margin-bottom: 16px;
-    }
-    .pay-modal .pay-btn {
-      display: block;
-      width: 100%;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 13px 0;
-      font-weight: 700;
-      font-size: 1.13rem;
-      cursor: pointer;
-      margin-top: 18px;
-      transition: background .15s;
-    }
-    .pay-modal .pay-btn:hover { background: var(--primary-hover);}
-    .pay-modal .promo-link {
-      color: var(--primary);
-      font-size: .97rem;
-      font-weight: 600;
-      margin: 10px 0;
-      cursor: pointer;
-      text-decoration: underline;
-      background: none;
-      border: none;
-    }
-    .pay-modal .checkbox-row {
-      margin: 10px 0;
-      font-size: .99rem;
-    }
-    .pay-modal .payment-methods button {
-      background: none;
-      border: 2px solid var(--primary-light);
-      color: var(--primary);
-      font-weight: 600;
-      border-radius: 7px;
-      padding: 7px 20px;
-      font-size: 1.07rem;
-      cursor: pointer;
-      transition: background .14s, border .15s, color .12s;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .pay-modal .payment-methods button.active, .pay-modal .payment-methods button:hover {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary-hover);
-    }
-    @keyframes fadeInSection { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
-    @media (max-width: 600px) {
-      .main {padding:0 2px;}
-      .pay-modal {min-width:95vw;padding:18px 4px;}
-      .billing-cards { gap:6px;}
+    .help-bottom-bar button.active, .help-bottom-bar button:hover { color: var(--primary-hover);}
+    .help-bottom-bar i { font-size: 1.4em;}
+    /* Demo avatar agent */
+    .help-header .help-agent { background:#eee;}
+    /* Hide scrollbar in help panel */
+    .help-panel-content::-webkit-scrollbar { width: 0 !important;}
+    /* Responsive */
+    @media (max-width:600px){
+      .main{padding:0 1px;}
+      .help-panel {margin:0 2vw 2vw 0;}
+      .help-float-btn{right:10px;bottom:10px;}
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar with professional icons -->
+  <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
-    <div class="logo">FH</div>
-    <button class="sidebar-icon" title="Dashboard"><i class="ri-home-5-line"></i> <span class="label">Dashboard</span></button>
-    <button class="sidebar-icon" title="Trades"><i class="ri-exchange-dollar-line"></i> <span class="label">Trades</span></button>
-    <button class="sidebar-icon" title="Portfolio"><i class="ri-briefcase-4-line"></i> <span class="label">Portfolio</span></button>
-    <button class="sidebar-icon" title="Bots"><i class="ri-robot-2-line"></i> <span class="label">Bots</span></button>
-    <button class="sidebar-icon" title="Grid"><i class="ri-grid-line"></i> <span class="label">Grid</span></button>
-    <button class="sidebar-icon" title="TradingView"><i class="ri-bar-chart-grouped-line"></i> <span class="label">TradingView</span></button>
-    <button class="sidebar-icon" title="Billing" style="color:var(--primary);" tabindex="0"><i class="ri-money-dollar-circle-line"></i> <span class="label">Billing</span></button>
-    <button class="sidebar-icon" title="Signals"><i class="ri-broadcast-line"></i> <span class="label">Signals</span></button>
-    <button class="sidebar-icon" title="Settings"><i class="ri-settings-3-line"></i> <span class="label">Settings</span></button>
+    <div class="logo"><img src="https://cdn.jsdelivr.net/gh/didac007/financial-harmony-site@main/logo-fh.png" alt="Financial Harmony logo"></div>
+    <button class="sidebar-icon active" data-section="dashboard" title="Dashboard"><i class="ri-home-5-line"></i> <span class="label">Dashboard</span></button>
+    <button class="sidebar-icon" data-section="trades" title="Trades"><i class="ri-exchange-dollar-line"></i> <span class="label">Trades</span></button>
+    <button class="sidebar-icon" data-section="portfolio" title="Portfolio"><i class="ri-briefcase-4-line"></i> <span class="label">Portfolio</span></button>
+    <button class="sidebar-icon" data-section="bots" title="Bots"><i class="ri-robot-2-line"></i> <span class="label">Bots</span></button>
+    <button class="sidebar-icon" data-section="terminal" title="Trading Terminal"><i class="ri-bar-chart-grouped-line"></i> <span class="label">Terminal</span></button>
+    <button class="sidebar-icon" data-section="signals" title="Signals"><i class="ri-broadcast-line"></i> <span class="label">Signals</span></button>
+    <button class="sidebar-icon" data-section="marketplace" title="Marketplace"><i class="ri-store-3-line"></i> <span class="label">Marketplace</span></button>
+    <button class="sidebar-icon" data-section="billing" title="Billing"><i class="ri-money-dollar-circle-line"></i> <span class="label">Billing</span></button>
+    <button class="sidebar-icon" data-section="account" title="Account & Security"><i class="ri-user-settings-line"></i> <span class="label">Account</span></button>
+    <button class="sidebar-icon" data-section="help" title="Ayuda/Soporte"><i class="ri-customer-service-2-line"></i> <span class="label">Ayuda</span></button>
   </nav>
   <!-- Topbar -->
   <div class="topbar" id="topbar">
-    <div class="logo"><img src="financial_harmony_logo.png" alt="Financial Harmony Logo"></div>
+    <div class="logo-txt">
+      <img src="https://cdn.jsdelivr.net/gh/didac007/financial-harmony-site@main/logo-fh.png" alt="logo" />
+      <span>Financial Harmony</span>
+    </div>
     <div class="nav-tabs">
       <button class="nav-tab active">Live Trading</button>
       <button class="nav-tab">Demo</button>
@@ -409,136 +317,401 @@
       <i class="ri-user-3-line"></i>
     </div>
   </div>
-  <!-- Main Content -->
+  <!-- Main SPA Sections -->
   <main class="main" id="main">
-    <h2 style="font-size:2rem;font-weight:800;margin-bottom:0;">Billing</h2>
-    <div class="nav-tabs" style="margin-bottom:0;">
-      <button class="nav-tab active">Live Trading</button>
-      <button class="nav-tab">Demo</button>
-    </div>
-    <div class="billing-cards">
-      <!-- Free Plan -->
-      <div class="plan-card active" data-plan="free">
-        <div class="plan-title">Free</div>
-        <div class="plan-price">$0 <span class="plan-period">/ month</span></div>
-        <div class="plan-save" style="color:#8391ad;">No Cost</div>
-        <button class="btn-plan active">Active</button>
-        <ul>
-          <li><i class="ri-check-line"></i>3 Active Manual Trades</li>
-          <li><i class="ri-check-line"></i>3 Active Signal Trades</li>
-          <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
-          <li><i class="ri-check-line"></i>1 Active Grid Bot</li>
-          <li><i class="ri-check-line"></i>1 Active DCA Bot</li>
-          <li><i class="ri-check-line"></i>1 Active TradingView Bot</li>
-          <li><i class="ri-check-line"></i>1 Monthly Backtesting Run</li>
-          <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
-        </ul>
+    <!-- Dashboard -->
+    <section id="dashboard" class="section active">
+      <h2>Dashboard</h2>
+      <p>Open Trades: 0 hot trades (out of 0)</p>
+      <div style="text-align: center; margin: 18px 0 26px 0;">
+        <span style="font-size: 48px; color: #ccc;">↓</span>
+        <p>No open trades</p>
+        <button class="create-bot">Create Trade</button>
       </div>
-      <!-- Starter Plan -->
-      <div class="plan-card" data-plan="starter">
-        <div class="plan-title">Starter</div>
-        <div class="plan-price">$19.99 <span class="plan-period">/ month</span></div>
-        <div class="plan-save">You save $118.9 a year</div>
-        <button class="btn-plan">Upgrade</button>
-        <ul>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
-          <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
-          <li><i class="ri-check-line"></i>2 Active Grid Bots</li>
-          <li><i class="ri-check-line"></i>2 Active DCA Bots</li>
-          <li><i class="ri-check-line"></i>2 Active TradingView Bots</li>
-          <li><i class="ri-check-line"></i>10 Monthly Backtesting Runs</li>
-          <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
-        </ul>
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
+        <div class="stat-card"><h3>Open Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Amount in Open Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>PnL in Open Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Potential Profit</h3><p>0</p></div>
       </div>
-      <!-- Advanced Plan -->
-      <div class="plan-card" data-plan="advanced">
-        <div class="plan-title">Advanced</div>
-        <div class="plan-price">$32.99 <span class="plan-period">/ month</span></div>
-        <div class="plan-save">You save $202.9 a year</div>
-        <button class="btn-plan">Upgrade</button>
-        <ul>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
-          <li><i class="ri-check-line"></i>3 Active Signals Bots</li>
-          <li><i class="ri-check-line"></i>5 Active Grid Bots</li>
-          <li><i class="ri-check-line"></i>5 Active DCA Bots</li>
-          <li><i class="ri-check-line"></i>5 Active TradingView Bots</li>
-          <li><i class="ri-check-line"></i>50 Monthly Backtesting Runs</li>
-          <li><i class="ri-information-line" title="Primary API Slot"></i>2 Primary API Slots</li>
-        </ul>
+      <div class="chart-container"><canvas id="dashboard-overview-chart"></canvas></div>
+    </section>
+    <!-- Trades -->
+    <section id="trades" class="section">
+      <h2>Trades</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Open</button>
+        <button class="nav-tab">Closed</button>
       </div>
-      <!-- Premium Plan -->
-      <div class="plan-card" data-plan="premium">
-        <div class="plan-title">Premium</div>
-        <div class="plan-price">$52.99 <span class="plan-period">/ month</span></div>
-        <div class="plan-save">You save $322.9 a year</div>
-        <button class="btn-plan">Upgrade</button>
-        <ul>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signals Bots</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active Grid Bots</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active DCA Bots</li>
-          <li><i class="ri-check-line"></i><b>Unlimited</b> Active TradingView Bots</li>
-          <li><i class="ri-check-line"></i>250 Monthly Backtesting Runs</li>
-          <li><i class="ri-information-line" title="Primary API Slot"></i>5 Primary API Slots</li>
-        </ul>
-      </div>
-    </div>
-    <!-- Payment Modal -->
-    <div class="pay-modal-bg" id="pay-modal-bg">
-      <div class="pay-modal" id="pay-modal">
-        <button class="close-btn" id="close-pay-modal" title="Close">&times;</button>
-        <div class="plan-title" id="modal-plan-title"></div>
-        <div class="features-wrap" id="modal-plan-features"></div>
-        <div class="duration">
-          <label><input type="radio" name="duration" value="annually" checked>Annually <span style="background:#e0eaff;color:#2563eb;font-size:.97em;padding:2px 6px;border-radius:6px;margin-left:5px;">SAVE 33%</span></label>
-          <label><input type="radio" name="duration" value="monthly">Monthly</label>
+      <div style="display: flex; gap:18px;">
+        <div style="flex: 1;">
+          <h3>Trades Amount Allocation</h3>
+          <div class="chart-container"><canvas id="trades-allocation-chart"></canvas></div>
+          <p>Total $0</p>
         </div>
-        <div class="price-row" id="modal-plan-price"></div>
-        <div class="payment-methods">
-          <button type="button" class="active" data-method="paypal"><i class="ri-paypal-fill"></i> PayPal</button>
-          <button type="button" data-method="credit-card"><i class="ri-bank-card-line"></i> Credit Card</button>
-          <button type="button" data-method="crypto"><i class="ri-coins-line"></i> Crypto</button>
+        <div style="flex: 1;">
+          <h3>Number of Trades</h3>
+          <div class="chart-container"><canvas id="trades-number-chart"></canvas></div>
+          <p>No data collected</p>
         </div>
-        <div style="font-size:.97em; color:var(--muted);margin-bottom:12px;">
-          Your plan will start today and will auto-renew on the same date next year or month.
-        </div>
-        <div class="checkbox-row">
-          <input type="checkbox" id="authorize" /> I authorize Financial Harmony to charge me automatically every period until I cancel my subscription.
-        </div>
-        <button class="promo-link" onclick="alert('Promo feature not implemented')">+ Add Promo Code</button>
-        <button class="pay-btn" id="pay-btn">Pay Now</button>
       </div>
-    </div>
+      <table>
+        <thead>
+        <tr><th>Trade ID</th><th>Symbol</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>001</td><td>BTC/USDT</td><td>$100</td><td>Open</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <!-- Portfolio -->
+    <section id="portfolio" class="section">
+      <h2>Portfolio</h2>
+      <div class="nav-tabs" style="margin-bottom: 0;">
+        <button class="nav-tab active">Assets (13)</button>
+        <button class="nav-tab">Positions (6)</button>
+      </div>
+      <div style="display: flex; gap:18px;">
+        <div style="flex: 1;">
+          <h3>Assets allocation</h3>
+          <div class="chart-container"><canvas id="portfolio-allocation-chart"></canvas></div>
+          <p>Total $95,69</p>
+        </div>
+        <div style="flex: 2;">
+          <h3>Price Change</h3>
+          <div class="chart-container"><canvas id="portfolio-change-chart"></canvas></div>
+        </div>
+      </div>
+      <table>
+        <thead>
+        <tr><th>Symbol</th><th>Type</th><th>Value</th><th>PnL</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>BTC/USDT</td><td>Spot</td><td>$50</td><td>+2%</td><td>Active</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <!-- Bots -->
+    <section id="bots" class="section">
+      <h2>Bots</h2>
+      <p>Panel de gestión de Bots (Signals, Grid, DCA, TradingView, etc).</p>
+      <div class="stat-card"><h3>Signals Bots</h3><p>0</p></div>
+      <div class="stat-card"><h3>TradingView Bots</h3><p>0</p></div>
+      <div class="stat-card"><h3>DCA Bots</h3><p>0</p></div>
+      <div class="stat-card"><h3>Grid Bots</h3><p>0</p></div>
+    </section>
+    <!-- Trading Terminal -->
+    <section id="terminal" class="section">
+      <h2>Trading Terminal</h2>
+      <form>
+        <label>Account</label>
+        <select><option>My-Bitget-Spot-8D21</option></select>
+        <label>Symbol</label>
+        <input type="text" value="BTC/USDT">
+        <label>New Amount (USDT)</label>
+        <input type="text">
+        <label>Available Amount</label>
+        <p>27.269 USDT (27.26 USD)</p>
+        <label>Trade Amount</label>
+        <input type="text" value="5.03 USDT (5.03 USD)">
+        <button type="submit">Create Trade</button>
+      </form>
+      <div class="chart-container"><canvas id="terminal-chart"></canvas></div>
+    </section>
+    <!-- Signals -->
+    <section id="signals" class="section">
+      <h2>Signals</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Open</button>
+        <button class="nav-tab">Closed</button>
+      </div>
+      <table>
+        <thead>
+        <tr><th>Symbol</th><th>Exchanges</th><th>Price</th><th>Profit</th><th>Last Updated</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>BTC/USDT</td><td>Bitget</td><td>$112,000</td><td>2.5%</td><td>5 min ago</td><td><button>View</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <!-- Marketplace -->
+    <section id="marketplace" class="section">
+      <h2>Marketplace</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        <div class="stat-card"><h3>The MARTINGALE Bot</h3><p>★★★★☆ (4.2)</p><button>Free Trial</button></div>
+        <div class="stat-card"><h3>Crypto Dreams</h3><p>Not enough reviews</p><button>Free Trial</button></div>
+      </div>
+    </section>
+    <!-- Billing -->
+    <section id="billing" class="section">
+      <h2>Billing</h2>
+      <div class="billing-cards">
+        <div class="plan-card active" data-plan="free">
+          <div class="plan-title">Free</div>
+          <div class="plan-price">$0 <span class="plan-period">/ month</span></div>
+          <div class="plan-save" style="color:#8391ad;">No Cost</div>
+          <button class="btn-plan active">Active</button>
+          <ul>
+            <li><i class="ri-check-line"></i>3 Active Manual Trades</li>
+            <li><i class="ri-check-line"></i>3 Active Signal Trades</li>
+            <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
+            <li><i class="ri-check-line"></i>1 Active Grid Bot</li>
+            <li><i class="ri-check-line"></i>1 Active DCA Bot</li>
+            <li><i class="ri-check-line"></i>1 Active TradingView Bot</li>
+            <li><i class="ri-check-line"></i>1 Monthly Backtesting Run</li>
+            <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
+          </ul>
+        </div>
+        <div class="plan-card" data-plan="starter">
+          <div class="plan-title">Starter</div>
+          <div class="plan-price">$19.99 <span class="plan-period">/ month</span></div>
+          <div class="plan-save">You save $118.9 a year</div>
+          <button class="btn-plan">Upgrade</button>
+          <ul>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+            <li><i class="ri-check-line"></i>1 Active Signals Bot</li>
+            <li><i class="ri-check-line"></i>2 Active Grid Bots</li>
+            <li><i class="ri-check-line"></i>2 Active DCA Bots</li>
+            <li><i class="ri-check-line"></i>2 Active TradingView Bots</li>
+            <li><i class="ri-check-line"></i>10 Monthly Backtesting Runs</li>
+            <li><i class="ri-information-line" title="Primary API Slot"></i>1 Primary API Slot</li>
+          </ul>
+        </div>
+        <div class="plan-card" data-plan="advanced">
+          <div class="plan-title">Advanced</div>
+          <div class="plan-price">$32.99 <span class="plan-period">/ month</span></div>
+          <div class="plan-save">You save $202.9 a year</div>
+          <button class="btn-plan">Upgrade</button>
+          <ul>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+            <li><i class="ri-check-line"></i>3 Active Signals Bots</li>
+            <li><i class="ri-check-line"></i>5 Active Grid Bots</li>
+            <li><i class="ri-check-line"></i>5 Active DCA Bots</li>
+            <li><i class="ri-check-line"></i>5 Active TradingView Bots</li>
+            <li><i class="ri-check-line"></i>50 Monthly Backtesting Runs</li>
+            <li><i class="ri-information-line" title="Primary API Slot"></i>2 Primary API Slots</li>
+          </ul>
+        </div>
+        <div class="plan-card" data-plan="premium">
+          <div class="plan-title">Premium</div>
+          <div class="plan-price">$52.99 <span class="plan-period">/ month</span></div>
+          <div class="plan-save">You save $322.9 a year</div>
+          <button class="btn-plan">Upgrade</button>
+          <ul>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Manual Trades</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signal Trades</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Signals Bots</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active Grid Bots</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active DCA Bots</li>
+            <li><i class="ri-check-line"></i><b>Unlimited</b> Active TradingView Bots</li>
+            <li><i class="ri-check-line"></i>250 Monthly Backtesting Runs</li>
+            <li><i class="ri-information-line" title="Primary API Slot"></i>5 Primary API Slots</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Payment Modal -->
+      <div class="pay-modal-bg" id="pay-modal-bg">
+        <div class="pay-modal" id="pay-modal">
+          <button class="close-btn" id="close-pay-modal" title="Close">&times;</button>
+          <div class="plan-title" id="modal-plan-title"></div>
+          <div class="features-wrap" id="modal-plan-features"></div>
+          <div class="duration">
+            <label><input type="radio" name="duration" value="annually" checked>Annually <span style="background:#e0eaff;color:#2563eb;font-size:.97em;padding:2px 6px;border-radius:6px;margin-left:5px;">SAVE 33%</span></label>
+            <label><input type="radio" name="duration" value="monthly">Monthly</label>
+          </div>
+          <div class="price-row" id="modal-plan-price"></div>
+          <div class="payment-methods">
+            <button type="button" class="active" data-method="paypal"><i class="ri-paypal-fill"></i> PayPal</button>
+            <button type="button" data-method="credit-card"><i class="ri-bank-card-line"></i> Credit Card</button>
+            <button type="button" data-method="crypto"><i class="ri-coins-line"></i> Crypto</button>
+          </div>
+          <div style="font-size:.97em; color:var(--muted);margin-bottom:12px;">
+            Your plan will start today and will auto-renew on the same date next year or month.
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="authorize" /> I authorize Financial Harmony to charge me automatically every period until I cancel my subscription.
+          </div>
+          <button class="promo-link" onclick="alert('Promo feature not implemented')">+ Add Promo Code</button>
+          <button class="pay-btn" id="pay-btn">Pay Now</button>
+        </div>
+      </div>
+    </section>
+    <!-- Account & Security -->
+    <section id="account" class="section">
+      <h2>Account & Security</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:36px;">
+        <div style="flex:1;min-width:290px;">
+          <div class="stat-card" style="text-align:left;">
+            <h3>Basic Information</h3>
+            <div><b>Full Name:</b> diego mercado ferreira</div>
+            <div><b>User Name:</b> didac007</div>
+            <div><b>Email:</b> eoamordavida@hotmail.com</div>
+            <div><b>Password:</b> ******** <a href="#" style="color:var(--primary);margin-left:7px;">Change</a></div>
+          </div>
+          <div class="stat-card" style="text-align:left;">
+            <h3>External Accounts</h3>
+            <div><b>Telegram:</b> <span style="color:#16a34a;">&#9679; Connected</span> didac007 <a href="#" style="color:var(--primary);margin-left:7px;">Disconnect</a></div>
+            <div><b>Discord:</b> <span style="color:#dc2626;">&#9679; Not Connected</span> <a href="#" style="color:var(--primary);margin-left:7px;">Connect</a></div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:290px;">
+          <div class="stat-card" style="text-align:left;">
+            <h3>Security</h3>
+            <div><b>Google Authenticator:</b> <span style="color:#dc2626;">&#9679; Inactive</span> <a href="#" style="color:var(--primary);margin-left:7px;">Activate</a></div>
+          </div>
+          <div class="stat-card" style="text-align:left;">
+            <h3>Settings</h3>
+            <div>Dark Mode <span style="background:var(--primary-light);color:var(--primary);font-size:.9em;padding:2px 7px;border-radius:6px;margin-left:6px;">NEW</span>
+              <input type="checkbox" id="darkmode-toggle" style="margin-left:12px;transform:scale(1.2);vertical-align:middle;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Help / Support (placeholder, real panel is floating) -->
+    <section id="help" class="section">
+      <h2>Ayuda y Soporte</h2>
+      <p>Abre el panel de ayuda desde el botón flotante abajo a la derecha, o desde el menú.</p>
+    </section>
   </main>
+  <!-- Floating help panel -->
+  <div class="help-float-btn" id="help-float-btn" title="Ayuda / Soporte">
+    <i class="ri-customer-service-2-line"></i>
+  </div>
+  <div class="help-panel-bg" id="help-panel-bg">
+    <div class="help-panel">
+      <div class="help-header">
+        <div class="help-agents">
+          <img class="help-agent" src="https://randomuser.me/api/portraits/men/32.jpg" alt="agent">
+          <img class="help-agent" src="https://randomuser.me/api/portraits/men/33.jpg" alt="agent">
+          <img class="help-agent" src="https://randomuser.me/api/portraits/men/34.jpg" alt="agent">
+        </div>
+        <button class="close-btn" id="help-close-btn">&times;</button>
+      </div>
+      <div class="help-panel-content" style="flex:1;overflow-y:auto;">
+        <h2>Hi there <span style="font-size:1.1em;">👋</span><br>How can we help?</h2>
+        <p>Send us a message<br><span style="font-size:.98em;color:#eee;">We typically reply in under 5 minutes</span></p>
+        <div class="search-box">
+          <input type="search" placeholder="Search for help..." />
+        </div>
+        <div class="help-links-list">
+          <div class="help-link-item">Signals Bot Advanced Settings – Entry Strategy</div>
+          <div class="help-link-item">Disclaimer on Historical Data and Backtesting Assumptions</div>
+          <div class="help-link-item">How to connect your API</div>
+        </div>
+      </div>
+      <div class="help-bottom-bar">
+        <button class="active"><i class="ri-home-4-line"></i><span style="font-size:.93em;">Home</span></button>
+        <button><i class="ri-chat-3-line"></i><span style="font-size:.93em;">Messages</span></button>
+        <button><i class="ri-question-line"></i><span style="font-size:.93em;">Help</span></button>
+        <button><i class="ri-task-line"></i><span style="font-size:.93em;">Tasks</span></button>
+      </div>
+    </div>
+  </div>
   <script>
+    // SPA Navigation
+    document.querySelectorAll('.sidebar-icon').forEach(btn => {
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.sidebar-icon').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        let sec = btn.dataset.section;
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        if(sec) document.getElementById(sec).classList.add('active');
+        // Open help panel if help
+        if(sec==="help") showHelpPanel();
+      });
+    });
+
+    // Topbar Nav Tabs
+    document.querySelectorAll('.nav-tabs .nav-tab').forEach(tab => {
+      tab.addEventListener('click', function(){
+        tab.parentElement.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Dark mode toggle
+    document.getElementById('darkmode-toggle').addEventListener('change', function(){
+      document.body.classList.toggle('dark', this.checked);
+    });
+
+    // Help Panel
+    function showHelpPanel() {
+      document.getElementById('help-panel-bg').classList.add('active');
+    }
+    document.getElementById('help-float-btn').onclick = showHelpPanel;
+    document.getElementById('help-close-btn').onclick = function(){
+      document.getElementById('help-panel-bg').classList.remove('active');
+    };
+    document.getElementById('help-panel-bg').onclick = function(e){
+      if(e.target===document.getElementById('help-panel-bg')) document.getElementById('help-panel-bg').classList.remove('active');
+    };
+
     // Fetch Crypto Prices
     function updateCryptoPrices() {
       fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,notcoin,dogecoin&vs_currencies=usd&include_24hr_change=true')
-        .then(r => r.json())
-        .then(data => {
-          function setPrice(id, coin) {
-            let el = document.getElementById(id + '-price');
-            if(!el) return;
-            let price = data[coin]?.usd?.toFixed(2) ?? '--';
-            let change = data[coin]?.usd_24h_change?.toFixed(2) ?? '--';
-            let dir = change > 0 ? '▲' : '▼';
-            let cls = change > 0 ? 'up' : 'down';
-            el.querySelector('.price').textContent = `$${price}`;
-            el.querySelector('.price-change').textContent = `${change}% ${dir}`;
-            el.querySelector('.price-change').className = `price-change ${cls}`;
-          }
-          setPrice('btc','bitcoin');
-          setPrice('eth','ethereum');
-          setPrice('ada','cardano');
-          setPrice('not','notcoin');
-          setPrice('doge','dogecoin');
-        });
+      .then(r => r.json())
+      .then(data => {
+        function setPrice(id, coin) {
+          let el = document.getElementById(id + '-price');
+          if(!el) return;
+          let price = data[coin]?.usd?.toFixed(2) ?? '--';
+          let change = data[coin]?.usd_24h_change?.toFixed(2) ?? '--';
+          let dir = change > 0 ? '▲' : '▼';
+          let cls = change > 0 ? 'up' : 'down';
+          el.querySelector('.price').textContent = `$${price}`;
+          el.querySelector('.price-change').textContent = `${change}% ${dir}`;
+          el.querySelector('.price-change').className = `price-change ${cls}`;
+        }
+        setPrice('btc','bitcoin');
+        setPrice('eth','ethereum');
+        setPrice('ada','cardano');
+        setPrice('not','notcoin');
+        setPrice('doge','dogecoin');
+      });
     }
     updateCryptoPrices();
-    setInterval(updateCryptoPrices, 30000);
+    setInterval(updateCryptoPrices, 32000);
+
+    // Charts
+    new Chart(document.getElementById('dashboard-overview-chart'), {
+      type: 'line',
+      data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{ label: 'Performance', data: [0, 10, 5, 15, 10, 20], borderColor: '#2563eb', fill: false }]},
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
+    new Chart(document.getElementById('trades-allocation-chart'), {
+      type: 'doughnut',
+      data: { labels: ['BTC', 'ETH', 'Others'],
+        datasets: [{ data: [40, 30, 30], backgroundColor: ['#2563eb', '#60a5fa', '#ccc'] }]},
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
+    new Chart(document.getElementById('trades-number-chart'), {
+      type: 'bar',
+      data: { labels: ['1d', '3d', '1w', '1m', '3m', '1y'],
+        datasets: [{ label: 'Trades', data: [5, 10, 15, 20, 25, 30], backgroundColor: '#2563eb' }] },
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
+    new Chart(document.getElementById('portfolio-allocation-chart'), {
+      type: 'doughnut',
+      data: { labels: ['USDT', 'Other'],
+        datasets: [{ data: [90, 10], backgroundColor: ['#2563eb', '#60a5fa'] }]},
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
+    new Chart(document.getElementById('portfolio-change-chart'), {
+      type: 'line',
+      data: { labels: ['21:00','03:00','09:00','12:00','15:00','19:00'],
+        datasets: [{ label: 'BTC/USDT', data: [110540, 112000, 113000, 113200, 113000, 110480], borderColor: '#2563eb', fill: false }]},
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
+    new Chart(document.getElementById('terminal-chart'), {
+      type: 'line',
+      data: { labels: ['6','10','18','22','26','Sep'],
+        datasets: [{ label: 'BTC/USDT', data: [108000, 111000, 120000, 118000, 115000, 110480], borderColor: '#2563eb', fill: false }]},
+      options: { responsive: true, plugins:{legend:{display:false}} }
+    });
 
     // Billing Modal Logic
     const plansData = {
@@ -585,14 +758,13 @@
         price: { yearly: 529.9, monthly: 52.99, save: 322.9, old: 79.9 },
       }
     };
-    // Plans click
+    // Open modal
     document.querySelectorAll('.plan-card:not(.active) .btn-plan').forEach(btn => {
       btn.addEventListener('click', function(e){
         const planType = btn.closest('.plan-card').dataset.plan;
         openPayModal(planType);
       });
     });
-
     function openPayModal(planType) {
       const data = plansData[planType];
       document.getElementById('modal-plan-title').innerText = data.title;
@@ -646,7 +818,6 @@
       alert('Payment flow not implemented in demo.');
       document.getElementById('pay-modal-bg').classList.remove('active');
     };
-    // Modal close on outside click
     document.getElementById('pay-modal-bg').onclick = (e) => {
       if(e.target===document.getElementById('pay-modal-bg')) document.getElementById('pay-modal-bg').classList.remove('active');
     };
