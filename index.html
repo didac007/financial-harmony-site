@@ -448,6 +448,8 @@
         <div class="stat-card"><h3>Potential Profit</h3><p>0</p></div>
       </div>
       <div class="chart-container"><canvas id="dashboard-overview-chart"></canvas></div>
+      <h3>Accounts</h3>
+      <p>See all →</p>
     </section>
     <!-- Trades -->
     <section id="trades" class="section">
@@ -805,9 +807,9 @@
         <label class="bot-type-option"><input type="radio" name="bot-type" value="signals"> Signals Bot</label>
         <label class="bot-type-option"><input type="radio" name="bot-type" value="grid"> Grid Bot</label>
         <label class="bot-type-option"><input type="radio" name="bot-type" value="dca"> DCA Bot</label>
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview" checked> TradingView Bot</label>
+        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview"> TradingView Bot</label>
       </div>
-      <div id="tradingview-guide">
+      <div id="tradingview-guide" style="display: none;">
         <div class="bot-guide">
           <h3>How Does the Trading View Bot Work?</h3>
           <p>The Trading View Bot works by integrating TradingView alerts with financial harmony Bots. Set up alerts in TradingView based on technical indicators, price movements, or Pine scripts. When an alert is triggered, the bot automatically executes the trade on your exchange account.</p>
@@ -1126,10 +1128,10 @@
       "popup_height": "650"
     });
 
-    // Load Exchange Pairs (simulated, can be fetched from API in real app)
+    // Load Exchange Pairs (simulated for Bitget, can fetch from API)
     const exchangePairs = [
-      'BTC/USDT', 'ETH/USDT', 'ADA/USDT', 'XRP/USDT', 'SOL/USDT', 'DOGE/USDT', 'BNB/USDT', 'TRX/USDT', 'LINK/USDT', 'DOT/USDT'
-      // Add more from Bitget or others
+      'BNT/USDT', 'BOME/USDT', 'BR/USDT', 'BRETT/USDT', 'BROCCOLI/USDT', 'BSV/USDT', 'BSW/USDT', 'BTC/USDT'
+      // Add more from Bitget or other exchanges
     ];
     const symbolSelect = document.getElementById('symbol');
     exchangePairs.forEach(pair => {
