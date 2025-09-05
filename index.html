@@ -165,16 +165,46 @@
     .topbar .create-bot:hover { background: var(--primary-hover); transform: scale(1.07);}
     .topbar .notifications {
       position: relative; margin-right: 10px;
+      cursor: pointer;
     }
     .topbar .bell { font-size: 1.3rem; cursor: pointer; }
     .topbar .notification-count {
       position: absolute; top: -7px; right: -7px; background: #dc2626; color: #fff; border-radius: 50%; padding: 2px 7px; font-size: .8rem; font-weight: bold;
     }
+    .notifications-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      width: 300px;
+      padding: 16px;
+      z-index: 10;
+    }
+    .notifications-dropdown.active { display: block;}
+    .notification-item { margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px;}
     .topbar .user-profile {
       width: 38px; height: 38px; border-radius: 50%; background: var(--primary-light);
       display: flex; align-items: center; justify-content: center; font-size: 1.15rem; font-weight: 700; color: var(--primary);
       cursor: pointer; position: relative;
     }
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      width: 200px;
+      padding: 16px;
+      z-index: 10;
+    }
+    .user-dropdown.active { display: block;}
+    .user-dropdown a { display: block; margin-bottom: 8px; color: var(--text); text-decoration: none;}
+    .user-dropdown a:hover { color: var(--primary);}
     /* MAIN */
     .main {
       margin-left: 80px; margin-top: 68px; padding: 32px 32px 18px 32px;
@@ -398,7 +428,10 @@
     <button class="sidebar-icon active" data-section="dashboard" title="Dashboard"><i class="ri-home-5-line"></i> <span class="label">Dashboard</span></button>
     <button class="sidebar-icon" data-section="trades" title="Trades"><i class="ri-exchange-dollar-line"></i> <span class="label">Trades</span></button>
     <button class="sidebar-icon" data-section="portfolio" title="Portfolio"><i class="ri-briefcase-4-line"></i> <span class="label">Portfolio</span></button>
-    <button class="sidebar-icon" data-section="bots" title="Bots"><i class="ri-robot-2-line"></i> <span class="label">Bots</span></button>
+    <button class="sidebar-icon" data-section="bots-signals" title="My Signals Bots"><i class="ri-robot-2-line"></i> <span class="label">My Signals Bots</span></button>
+    <button class="sidebar-icon" data-section="bots-grid" title="My Grid Bots"><i class="ri-grid-line"></i> <span class="label">My Grid Bots</span></button>
+    <button class="sidebar-icon" data-section="bots-dca" title="My DCA Bots"><i class="ri-line-chart-line"></i> <span class="label">My DCA Bots</span></button>
+    <button class="sidebar-icon" data-section="bots-tradingview" title="My TradingView Bots"><i class="ri-line-chart-line"></i> <span class="label">My TradingView Bots</span></button>
     <button class="sidebar-icon" data-section="terminal" title="Trading Terminal"><i class="ri-bar-chart-grouped-line"></i> <span class="label">Terminal</span></button>
     <button class="sidebar-icon" data-section="signals" title="Signals"><i class="ri-broadcast-line"></i> <span class="label">Signals</span></button>
     <button class="sidebar-icon" data-section="marketplace" title="Marketplace"><i class="ri-store-3-line"></i> <span class="label">Marketplace</span></button>
@@ -510,16 +543,41 @@
         </tbody>
       </table>
     </section>
-    <!-- Bots -->
-    <section id="bots" class="section">
-      <h2>Bots</h2>
-      <p>Panel de gestión de Bots (Signals, Grid, DCA, TradingView, etc).</p>
-      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
-        <div class="stat-card"><h3>Signals Bots</h3><p>0</p></div>
-        <div class="stat-card"><h3>TradingView Bots</h3><p>0</p></div>
-        <div class="stat-card"><h3>DCA Bots</h3><p>0</p></div>
-        <div class="stat-card"><h3>Grid Bots</h3><p>0</p></div>
-      </div>
+    <!-- My Signals Bots -->
+    <section id="bots-signals" class="section">
+      <h2>My Signals Bots</h2>
+      <p>Revolutionizing auto trading with advanced strategies...</p>
+      <button>Watch Video</button>
+      <button>Learn More</button>
+      <ul class="bot-list">
+        <li data-bot="signals"><i class="ri-robot-2-line"></i> Signals Bot</li>
+      </ul>
+    </section>
+    <!-- My Grid Bots -->
+    <section id="bots-grid" class="section">
+      <h2>My Grid Bots</h2>
+      <p>Grid bots place buy and sell orders at preset levels...</p>
+      <ul class="bot-list">
+        <li data-bot="grid"><i class="ri-grid-line"></i> Grid Bot</li>
+      </ul>
+    </section>
+    <!-- My DCA Bots -->
+    <section id="bots-dca" class="section">
+      <h2>My DCA Bots</h2>
+      <p>Dollar-cost averaging bots buy at intervals...</p>
+      <ul class="bot-list">
+        <li data-bot="dca"><i class="ri-line-chart-line"></i> DCA Bot</li>
+      </ul>
+    </section>
+    <!-- My TradingView Bots -->
+    <section id="bots-tradingview" class="section">
+      <h2>My TradingView Bots</h2>
+      <p>Combine the power of TradingView with automation...</p>
+      <button>Watch Video</button>
+      <button>Learn More</button>
+      <ul class="bot-list">
+        <li data-bot="tradingview"><i class="ri-line-chart-line"></i> TradingView Bot</li>
+      </ul>
     </section>
     <!-- Trading Terminal -->
     <section id="terminal" class="section">
@@ -725,10 +783,10 @@
         <div style="flex:1;min-width:290px;">
           <div class="stat-card" style="text-align:left;">
             <h3>Basic Information</h3>
-            <div><b>Full Name:</b> diego mercado ferreira</div>
+            <div><b>Full Name:</b> </div>
             <div><b>User Name:</b> didac007</div>
-            <div><b>Email:</b> eoamordavida@hotmail.com</div>
-            <div><b>Password:</b> ******** <a href="#" style="color:var(--primary);margin-left:7px;">Change</a></div>
+            <div><b>Email:</b> </div>
+            <div><b>Password:</b>  <a href="#" style="color:var(--primary);margin-left:7px;">Change</a></div>
           </div>
           <div class="stat-card" style="text-align:left;">
             <h3>External Accounts</h3>
@@ -803,27 +861,32 @@
   <div class="bot-modal-bg" id="bot-modal-bg">
     <div class="bot-modal">
       <button class="close-btn" id="close-bot-modal">&times;</button>
-      <h2>Create Bot</h2>
-      <div class="bot-type-options">
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="signals"> Signals Bot</label>
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="grid"> Grid Bot</label>
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="dca"> DCA Bot</label>
-        <label class="bot-type-option"><input type="radio" name="bot-type" value="tradingview"> TradingView Bot</label>
-      </div>
-      <div id="tradingview-guide" style="display: none;">
-        <div class="bot-guide">
-          <h3>How Does the Trading View Bot Work?</h3>
-          <p>The Trading View Bot works by integrating TradingView alerts with financial harmony Bots. Set up alerts in TradingView based on technical indicators, price movements, or Pine scripts. When an alert is triggered, the bot automatically executes the trade on your exchange account.</p>
-          <h3>Key Features</h3>
-          <ul>
-            <li>Customize Trade Execution: Set up alerts based on indicators, trend lines, or price movements. Configure trades with specific entry, stop-loss, and take-profit levels.</li>
-            <li>Seamless Integration with Cornix: Easily link your TradingView alerts to Cornix by using your Bot's UUIDs for Trade Opening and for Trade Closing.</li>
-            <li>Supports Long and Short Trades: Execute both long and short trades based on predefined alerts.</li>
-            <li>Advanced Risk Management: Set stop-loss and take-profit levels for each trade. Utilize trailing stop and trailing take-profit strategies to lock in profits.</li>
-            <li>Fully Automated Trading: No need for manual order execution. Trade execution occurs automatically when alerts are triggered.</li>
-          </ul>
-          <h3>How to Set Up a Trading View Bot</h3>
-          <p>Getting started with Cornix Trading View Bots is simple and requires just a few steps. Follow this guide to set up and start automating your trades efficiently:</p>
+      <h2>Create New Bot</h2>
+      <div class="bot-guide">
+        <div class="bot-type">
+          <i class="ri-signal-tower-line"></i>
+          <h3>Signals Bot</h3>
+          <p>Follow signals from your favorite groups or our marketplace's experts, executing trades automatically.</p>
+        </div>
+        <div class="bot-type">
+          <i class="ri-grid-line"></i>
+          <h3>Grid Bot</h3>
+          <p>Automatically place buy and sell orders at preset levels, profiting from market fluctuations.</p>
+        </div>
+        <div class="bot-type">
+          <i class="ri-line-chart-line"></i>
+          <p>DCA Bot</p>
+          <p>Utilize dollar-cost averaging strategy with Cornix's advanced features.</p>
+        </div>
+        <div class="bot-type">
+          <i class="ri-line-chart-line"></i>
+          <h3>TradingView Bot</h3>
+          <p>Link TradingView alerts to Cornix for automatic execution based on your strategies and indicators.</p>
+        </div>
+        <div class="bot-type">
+          <i class="ri-hand-coin-line"></i>
+          <h3>Manual Trading</h3>
+          <p>Execute trades manually with precision and flexibility, utilizing Cornix's powerful tools.</p>
         </div>
       </div>
       <form id="bot-form">
@@ -1160,6 +1223,18 @@
         document.getElementById('max-orders').value = '10';
       }
       // For custom, user edits freely
+    });
+
+    // Bot List Click to Create
+    document.querySelectorAll('.bot-list li').forEach(li => {
+      li.addEventListener('click', () => {
+        const botType = li.dataset.bot;
+        document.getElementById('bot-modal-bg').classList.add('active');
+        // Preselect bot type
+        document.querySelector(`input[name="bot-type"][value="${botType}"]`).checked = true;
+        // Show guide if tradingview
+        document.getElementById('tradingview-guide').style.display = botType === 'tradingview' ? 'block' : 'none';
+      });
     });
 
     // Billing Modal Logic
