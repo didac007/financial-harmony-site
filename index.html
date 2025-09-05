@@ -14,6 +14,7 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         /* Sidebar */
@@ -28,6 +29,12 @@
             position: fixed;
             height: 100%;
             z-index: 10;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+            background-color: #f0f0f0;
         }
 
         .sidebar-icon {
@@ -35,14 +42,17 @@
             margin-bottom: 20px;
             cursor: pointer;
             color: #666;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
 
         .sidebar-icon.active {
             color: #007bff;
+            transform: scale(1.2);
         }
 
         .sidebar-icon:hover {
             color: #007bff;
+            transform: rotate(10deg);
         }
 
         /* Topbar */
@@ -58,6 +68,11 @@
             align-items: center;
             padding: 0 20px;
             z-index: 9;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar:hover ~ .topbar {
+            left: 200px;
         }
 
         .logo {
@@ -65,11 +80,17 @@
             font-weight: bold;
             color: #000;
             margin-right: 20px;
+            transition: font-size 0.3s ease;
+        }
+
+        .sidebar:hover .logo {
+            font-size: 24px;
         }
 
         .nav-tabs {
             display: flex;
             margin-right: auto;
+            transition: transform 0.3s ease;
         }
 
         .nav-tab {
@@ -77,16 +98,25 @@
             cursor: pointer;
             border-radius: 5px;
             margin-right: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
         }
 
         .nav-tab.active {
             background-color: #007bff;
             color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab:hover {
+            background-color: #0056b3;
+            color: #fff;
+            transform: scale(1.1);
         }
 
         .crypto-prices {
             display: flex;
             align-items: center;
+            animation: slideIn 5s infinite alternate;
         }
 
         .crypto-price {
@@ -94,6 +124,11 @@
             display: flex;
             align-items: center;
             font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .crypto-price:hover {
+            opacity: 0.7;
         }
 
         .crypto-icon {
@@ -101,10 +136,15 @@
             height: 20px;
             border-radius: 50%;
             margin-right: 5px;
-            background-color: orange; /* Placeholder for icons */
+            background-color: orange;
             color: #fff;
             text-align: center;
             line-height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .crypto-price:hover .crypto-icon {
+            transform: rotate(360deg);
         }
 
         .price-change.up {
@@ -122,11 +162,22 @@
             border-radius: 5px;
             margin-left: 20px;
             cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .create-bot:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
         }
 
         .notifications {
             margin-left: 10px;
             position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .notifications:hover {
+            transform: scale(1.2);
         }
 
         .bell {
@@ -143,6 +194,11 @@
             border-radius: 50%;
             padding: 2px 6px;
             font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .notifications:hover .notification-count {
+            transform: scale(1.2);
         }
 
         .user-profile {
@@ -152,6 +208,11 @@
             border-radius: 50%;
             background-color: #ccc;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .user-profile:hover {
+            transform: scale(1.2);
         }
 
         /* Main Content */
@@ -162,6 +223,11 @@
             overflow-y: auto;
             width: calc(100% - 60px);
             height: calc(100vh - 60px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar:hover ~ .main {
+            margin-left: 200px;
         }
 
         .upgrade-banner {
@@ -170,6 +236,7 @@
             text-align: center;
             margin-bottom: 20px;
             border-radius: 5px;
+            animation: pulse 2s infinite;
         }
 
         .upgrade-button {
@@ -178,11 +245,17 @@
             padding: 5px 10px;
             border-radius: 5px;
             text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .upgrade-button:hover {
+            background-color: #0056b3;
         }
 
         /* Section Styles */
         .section {
             display: none;
+            animation: slideInSection 0.5s ease;
         }
 
         .section.active {
@@ -194,6 +267,17 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .section.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .section {
+            transform: translateY(20px);
+            opacity: 0;
         }
 
         /* Dropdown Menus */
@@ -209,6 +293,7 @@
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
+            animation: fadeIn 0.3s ease;
         }
 
         .dropdown:hover .dropdown-content {
@@ -220,6 +305,7 @@
             padding: 12px 16px;
             text-decoration: none;
             display: block;
+            transition: background-color 0.3s ease;
         }
 
         .dropdown-content a:hover {
@@ -230,15 +316,26 @@
         .social-list {
             list-style: none;
             padding: 0;
+            transition: transform 0.3s ease;
         }
 
         .social-item {
             margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .social-item:hover {
+            transform: translateX(10px);
         }
 
         .social-link {
             color: #007bff;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: #0056b3;
         }
 
         #telegram-link {
@@ -247,6 +344,7 @@
             padding: 10px;
             background-color: #e6f0ff;
             border-radius: 5px;
+            animation: bounceIn 0.5s ease;
         }
 
         /* Placeholder for charts and graphs */
@@ -259,6 +357,35 @@
             justify-content: center;
             border-radius: 5px;
             margin-bottom: 20px;
+            animation: pulse 3s infinite;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideInSection {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -325,7 +452,6 @@
             <p>Open Trades: 0 hot trades (out of 0)</p>
             <div class="chart-placeholder">No open trades</div>
             <button class="create-bot">Create Trade</button>
-            <!-- Add more elements from screenshot -->
         </div>
 
         <!-- Trades Section -->
@@ -337,7 +463,6 @@
             </div>
             <div class="chart-placeholder">Trades Amount Allocation: $0 Total</div>
             <div class="chart-placeholder">Number of Trades: No data collected</div>
-            <!-- Add filters, export, create trade -->
         </div>
 
         <!-- Portfolio Section -->
@@ -345,7 +470,6 @@
             <h2>Portfolio</h2>
             <div class="chart-placeholder">Accounts Allocation: $95.33 Total</div>
             <div class="chart-placeholder">Portfolio Change: No data collected</div>
-            <!-- Add accounts list, filters -->
             <ul>
                 <li>My Bitget-Futures-8D21</li>
                 <li>My Bitget-Spot-8D21</li>
@@ -358,7 +482,6 @@
             <p>Revolutionizing auto trading with advanced strategies...</p>
             <button>Watch Video</button>
             <button>Learn More</button>
-            <!-- Add info cards -->
         </div>
 
         <!-- My TradingView Bots Section -->
@@ -367,7 +490,6 @@
             <p>Combine the power of TradingView with Cornix's automation...</p>
             <button>Watch Video</button>
             <button>Learn More</button>
-            <!-- Add info cards -->
         </div>
 
         <!-- Trading Terminal Section -->
@@ -378,7 +500,6 @@
                 <label>Symbol: BTC/USDT</label>
                 <label>New Amount (USDT)</label>
                 <input type="text">
-                <!-- Add more fields -->
                 <button>Create Trade</button>
             </form>
         </div>
@@ -389,7 +510,6 @@
             <ul>
                 <li>The MARTINGALE Bot - PnL (6M): 109.69% ↑</li>
                 <li>Crypto Dreams - PnL (6M): 95.56% ↑</li>
-                <!-- Add more bots with ratings, risks -->
             </ul>
         </div>
 
@@ -413,7 +533,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Empty for now -->
                 </tbody>
             </table>
         </div>
@@ -467,7 +586,6 @@
             tab.addEventListener('click', () => {
                 navTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                // Add logic to switch content if needed
             });
         });
 
@@ -485,8 +603,6 @@
                 }
             });
         });
-
-        // Placeholder for dropdowns (add more as needed)
     </script>
 </body>
 </html>
