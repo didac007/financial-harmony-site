@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Accede al curso de Crypto con Armonía en Financial Harmony. Verifica tu seguimiento en redes y únete.">
+    <title>Inicia en Crypto con Armonía - Financial Harmony</title>
+    <link rel="icon" href="https://bitcoin.org/img/icons/opengraph.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2540 0%, #1E3A8A 100%), url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIyMDBweCIgaGVpZ2h0PSIyMDBweCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMiIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTEwMCwxMDBNMTAwLDEwMCBNMTAwLDEwMCBNMTAwLDEwMCIgc3Ryb2tlPSIjRkY5MzFBIiBzdHJva2Utd2lkdGg9IjIiPjwvcGF0aD48L2c+PC9zdmc+');
+            background-blend-mode: overlay;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        h1 { text-align: center; color: #F7931A; font-size: 2em; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
+        .logo { display: block; max-width: 300px; margin: 0 auto 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(247, 147, 26, 0.5); }
+        p { text-align: center; margin-bottom: 20px; font-size: 1.1em; }
+        label { display: flex; align-items: center; margin: 10px 0 5px; font-weight: bold; color: #FFD700; }
+        label::before { content: '₿'; margin-right: 5px; font-size: 1.2em; color: #F7931A; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #FFD700; border-radius: 5px; background: rgba(255, 255, 255, 0.2); color: #FFFFFF; font-size: 1em; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #F7931A; }
+        input[type="text"]::placeholder { color: #CCCCCC; }
+        button { width: 100%; padding: 12px; background: linear-gradient(90deg, #F7931A, #FFD700); color: #0A2540; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s, background 0.3s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(247, 147, 26, 0.7); background: linear-gradient(90deg, #FFD700, #F7931A); }
+        #resultado { margin-top: 20px; text-align: center; font-weight: bold; color: #FFD700; }
+        a { color: #F7931A; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        footer { text-align: center; margin-top: 20px; font-size: 0.8em; color: #CCCCCC; }
+        @media (max-width: 480px) { .container { padding: 20px; } h1 { font-size: 1.5em; } }
+    </style>
+    <script>
+        function verificarRespuestas() {
+            const respuestasCorrectas = { q1: "Aprende en armonia", q2: "Una imagen motivacional con una cita sobre aprendizaje", q3: "Inicia en Crypto con Armonía", q4: "Más de 50", q5: "Sí" };
+            const q1 = document.getElementById('q1').value.trim(); const q2 = document.getElementById('q2').value.trim(); const q3 = document.getElementById('q3').value.trim(); const q4 = document.getElementById('q4').value.trim(); const q5 = document.getElementById('q5').value.trim();
+            if (q1 === respuestasCorrectas.q1 && q2 === respuestasCorrectas.q2 && q3 === respuestasCorrectas.q3 && q4 === respuestasCorrectas.q4 && q5 === respuestasCorrectas.q5) {
+                document.getElementById('resultado').innerHTML = '¡Acceso concedido! Únete al curso en Telegram: <a href="https://t.me/+k6JRjS5U9vY3Yjg0">Enlace de Invitación</a>';
+            } else {
+                document.getElementById('resultado').innerHTML = 'Respuestas incorrectas. Verifica que sigas las cuentas e intenta de nuevo.';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="financial-harmony-logo.png" alt="Financial Harmony Logo - Inicia en Crypto con Armonía" class="logo">
+        <h1>Inicia en Crypto con Armonía</h1>
+        <p>Sigue las cuentas: <a href="https://x.com/financialharmon" target="_blank">@financialharmon en X</a>, <a href="https://instagram.com/jrfinancialharmony" target="_blank">@jrfinancialharmony en Instagram</a>, <a href="https://youtube.com/@FinancialHarmony-z1n" target="_blank">@FinancialHarmony-z1n en YouTube</a>.</p>
+        <label>1. Comenta el último post en X:</label><input type="text" id="q1" placeholder="Ingresa tu respuesta">
+        <label>2. Comenta el último story/post en Instagram:</label><input type="text" id="q2" placeholder="Ingresa tu respuesta">
+        <label>3. Comenta nuestro ultimo directo en YouTube:</label><input type="text" id="q3" placeholder="Ingresa tu respuesta">
+        <label>4. Sabes cuantos seguidores tenemos en Youtube:</label><input type="text" id="q4" placeholder="Ingresa tu respuesta">
+        <label>5. ¿Diste like/retweet al post más reciente? (Sí/No):</label><input type="text" id="q5" placeholder="Ingresa Sí o No">
+        <button onclick="verificarRespuestas()">Verificar y Acceder</button>
+        <div id="resultado"></div>
+    </div>
+    <footer>© 2025 Financial Harmony - Todos los derechos reservados</footer>
+</body>
+</html>
