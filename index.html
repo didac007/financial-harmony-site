@@ -573,7 +573,63 @@
         <div class="stat-card"><h3>Profit By Day</h3><p>No data collected</p></div>
       </div>
     </section>
-    /* Similar sections for other bots */
+    <!-- My Grid Bots -->
+    <section id="bots-grid" class="section">
+      <h2>My Grid Bots</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Live Trading</button>
+        <button class="nav-tab">Demo</button>
+      </div>
+      <select>
+        <option>Last Trade Opened</option>
+      </select>
+      <input type="text" placeholder="Search...">
+      <button>Filters</button>
+      <button>+ Create Bot</button>
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
+        <div class="stat-card"><h3>Closed Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Accumulated Profit</h3><p>No data collected</p></div>
+        <div class="stat-card"><h3>Profit By Day</h3><p>No data collected</p></div>
+      </div>
+    </section>
+    <!-- My DCA Bots -->
+    <section id="bots-dca" class="section">
+      <h2>My DCA Bots</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Live Trading</button>
+        <button class="nav-tab">Demo</button>
+      </div>
+      <select>
+        <option>Last Trade Opened</option>
+      </select>
+      <input type="text" placeholder="Search...">
+      <button>Filters</button>
+      <button>+ Create Bot</button>
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
+        <div class="stat-card"><h3>Closed Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Accumulated Profit</h3><p>No data collected</p></div>
+        <div class="stat-card"><h3>Profit By Day</h3><p>No data collected</p></div>
+      </div>
+    </section>
+    <!-- My TradingView Bots -->
+    <section id="bots-tradingview" class="section">
+      <h2>My TradingView Bots</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Live Trading</button>
+        <button class="nav-tab">Demo</button>
+      </div>
+      <select>
+        <option>Last Trade Opened</option>
+      </select>
+      <input type="text" placeholder="Search...">
+      <button>Filters</button>
+      <button>+ Create Bot</button>
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
+        <div class="stat-card"><h3>Closed Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Accumulated Profit</h3><p>No data collected</p></div>
+        <div class="stat-card"><h3>Profit By Day</h3><p>No data collected</p></div>
+      </div>
+    </section>
     <!-- Trading Terminal -->
     <section id="terminal" class="section">
       <h2>Trading Terminal</h2>
@@ -852,30 +908,118 @@
       </div>
     </div>
   </div>
-  <!-- Payment Modal -->
-  <div class="pay-modal-bg" id="pay-modal-bg">
-    <div class="pay-modal" id="pay-modal">
-      <button class="close-btn" id="close-pay-modal" title="Close">&times;</button>
-      <div class="plan-title" id="modal-plan-title"></div>
-      <div class="features-wrap" id="modal-plan-features"></div>
-      <div class="duration">
-        <label><input type="radio" name="duration" value="annually" checked>Annually <span style="background:#e0eaff;color:#2563eb;font-size:.97em;padding:2px 6px;border-radius:6px;margin-left:5px;">SAVE 33%</span></label>
-        <label><input type="radio" name="duration" value="monthly">Monthly</label>
+  <!-- Bot Type Selection Modal -->
+  <div class="bot-modal-bg" id="bot-type-modal-bg">
+    <div class="bot-modal">
+      <button class="close-btn" id="close-bot-type-modal">&times;</button>
+      <h2>Create New Bot</h2>
+      <div class="bot-guide">
+        <div class="bot-type" data-bot="signals">
+          <i class="ri-signal-tower-line"></i>
+          <h3>Signals Bot</h3>
+          <p>Follow signals from your favorite groups or our marketplace's experts, executing trades automatically.</p>
+        </div>
+        <div class="bot-type" data-bot="dca">
+          <i class="ri-line-chart-line"></i>
+          <h3>DCA Bot</h3>
+          <p>Utilize dollar-cost averaging strategy with Cornix's advanced features.</p>
+        </div>
+        <div class="bot-type" data-bot="grid">
+          <i class="ri-grid-line"></i>
+          <h3>Grid Bot</h3>
+          <p>Automatically place buy and sell orders at preset levels, profiting from market fluctuations.</p>
+        </div>
+        <div class="bot-type" data-bot="tradingview">
+          <i class="ri-line-chart-line"></i>
+          <h3>TradingView Bot</h3>
+          <p>Link TradingView alerts to Cornix for automatic execution based on your strategies and indicators.</p>
+        </div>
+        <div class="bot-type" data-bot="manual">
+          <i class="ri-hand-coin-line"></i>
+          <h3>Manual Trading</h3>
+          <p>Execute trades manually with precision and flexibility, utilizing Cornix's powerful tools.</p>
+        </div>
       </div>
-      <div class="price-row" id="modal-plan-price"></div>
-      <div class="payment-methods">
-        <button type="button" class="active" data-method="paypal"><i class="ri-paypal-fill"></i> PayPal</button>
-        <button type="button" data-method="credit-card"><i class="ri-bank-card-line"></i> Credit Card</button>
-        <button type="button" data-method="crypto"><i class="ri-coins-line"></i> Crypto</button>
-      </div>
-      <div style="font-size:.97em; color:var(--muted);margin-bottom:12px;">
-        Your plan will start today and will auto-renew on the same date next year or month.
-      </div>
-      <div class="checkbox-row">
-        <input type="checkbox" id="authorize" /> I authorize Financial Harmony to charge me automatically every period until I cancel my subscription.
-      </div>
-      <button class="promo-link" onclick="alert('Promo feature not implemented')">+ Add Promo Code</button>
-      <button class="pay-btn" id="pay-btn">Pay Now</button>
+    </div>
+  </div>
+  <!-- Bot Creation Modal -->
+  <div class="bot-modal-bg" id="bot-creation-modal-bg">
+    <div class="bot-modal">
+      <button class="close-btn" id="close-bot-creation-modal">&times;</button>
+      <h2 id="bot-creation-title">Create Bot</h2>
+      <form id="bot-form">
+        <div class="nav-tabs" style="margin-bottom: 16px;">
+          <button class="nav-tab active" data-tab="general">General</button>
+          <button class="nav-tab" data-tab="entries">Entries</button>
+          <button class="nav-tab" data-tab="take-profits">Take-Profits</button>
+          <button class="nav-tab" data-tab="stop">Stop</button>
+          <button class="nav-tab" data-tab="advanced">Advanced</button>
+        </div>
+        <div class="tab-content active" id="general">
+          <label for="bot-name">Bot Name</label>
+          <input type="text" id="bot-name" value="BTC/USDT Bot">
+          <label for="account">Account</label>
+          <select id="account">
+            <option>My-Bitget-Spot-8D21</option>
+          </select>
+          <label for="symbol">Symbol</label>
+          <select id="symbol">
+            <option>BTC/USDT</option>
+            <option>ETH/USDT</option>
+            <option>ADA/USDT</option>
+            <option>XRP/USDT</option>
+            <option>SOL/USDT</option>
+            <!-- More pairs from Bitget, etc. -->
+          </select>
+          <label for="amount-per-trade">Amount Per Trade</label>
+          <input type="number" id="amount-per-trade" value="12.3">
+          <label>Direction</label>
+          <div>
+            <label><input type="radio" name="direction" value="long" checked> Long</label>
+            <label><input type="radio" name="direction" value="short"> Short</label>
+          </div>
+          <label for="margin-type">Margin Type</label>
+          <select id="margin-type">
+            <option>Isolated</option>
+            <option>Cross</option>
+          </select>
+          <label for="multiplier">Multiplier</label>
+          <input type="number" id="multiplier" value="1">
+        </div>
+        <div class="tab-content" id="entries">
+          <label for="entry-strategy">Entry Strategy</label>
+          <select id="entry-strategy">
+            <option>Expert Martingale (Double position after loss, stop-loss 10%)</option>
+            <option>Expert DCA (Buy every 5% drop, max 5 orders)</option>
+            <option>Expert Grid (Buy low/sell high in 3% range)</option>
+            <option>Custom</option>
+          </select>
+        </div>
+        <div class="tab-content" id="take-profits">
+          <label for="take-profit-levels">Take Profit Levels</label>
+          <input type="text" id="take-profit-levels" placeholder="e.g. 1.5%, 3%, 5%">
+        </div>
+        <div class="tab-content" id="stop">
+          <label for="stop-loss">Stop Loss (%)</label>
+          <input type="number" id="stop-loss" value="10">
+          <label for="trailing-stop">Trailing Stop (%)</label>
+          <input type="number" id="trailing-stop" value="2">
+        </div>
+        <div class="tab-content" id="advanced">
+          <label for="uuid-open">UUID for Trade Opening</label>
+          <input type="text" id="uuid-open">
+          <label for="uuid-close">UUID for Trade Closing</label>
+          <input type="text" id="uuid-close">
+          <label for="max-orders">Max Orders</label>
+          <input type="number" id="max-orders" value="5">
+          <label for="interval-drop">Interval Drop (%)</label>
+          <input type="number" id="interval-drop" value="5">
+        </div>
+        <div class="tradingview-widget-container" style="height: 300px; margin-top: 20px;">
+          <div id="bot-chart-widget"></div>
+        </div>
+        <button type="submit">Create Bot</button>
+      </form>
     </div>
   </div>
   <script>
@@ -1054,96 +1198,20 @@
 
     // Bot Creation Modal
     document.getElementById('create-bot-btn').onclick = () => {
-      document.getElementById('bot-creation-modal-bg').classList.add('active');
+      document.getElementById('bot-type-modal-bg').classList.add('active');
     };
-    document.getElementById('close-bot-creation-modal').onclick = () => {
-      document.getElementById('bot-creation-modal-bg').classList.remove('active');
+    document.getElementById('close-bot-type-modal').onclick = () => {
+      document.getElementById('bot-type-modal-bg').classList.remove('active');
     };
-    document.getElementById('bot-creation-modal-bg').onclick = (e) => {
-      if(e.target===document.getElementById('bot-creation-modal-bg')) document.getElementById('bot-creation-modal-bg').classList.remove('active');
+    document.getElementById('bot-type-modal-bg').onclick = (e) => {
+      if(e.target===document.getElementById('bot-type-modal-bg')) document.getElementById('bot-type-modal-bg').classList.remove('active');
     };
-    document.getElementById('bot-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Bot created with selected strategy!');
-      document.getElementById('bot-creation-modal-bg').classList.remove('active');
-    });
 
-    // Bot Form Tabs
-    const botTabs = document.querySelectorAll('.bot-modal .nav-tab');
-    const botContents = document.querySelectorAll('.bot-modal .tab-content');
-
-    botTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        botTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        botContents.forEach(c => c.classList.remove('active'));
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Load TradingView Chart in Bot Modal
-    new TradingView.widget({
-      "container_id": "bot-chart-widget",
-      "width": "100%",
-      "height": "300",
-      "symbol": "BINANCE:BTCUSDT",
-      "interval": "D",
-      "timezone": "Etc/UTC",
-      "theme": "light",
-      "style": "1",
-      "locale": "es",
-      "toolbar_bg": "#f1f3f6",
-      "enable_publishing": false,
-      "allow_symbol_change": true,
-      "studies": ["MA", "RSI"],
-      "show_popup_button": true,
-      "popup_width": "1000",
-      "popup_height": "650"
-    });
-
-    // Load Exchange Pairs (simulated for Bitget, can fetch from API)
-    const exchangePairs = [
-      'BNT/USDT', 'BOME/USDT', 'BR/USDT', 'BRETT/USDT', 'BROCCOLI/USDT', 'BSV/USDT', 'BSW/USDT', 'BTC/USDT'
-      // Add more from Bitget or other exchanges
-    ];
-    const symbolSelect = document.getElementById('symbol');
-    exchangePairs.forEach(pair => {
-      const option = document.createElement('option');
-      option.value = pair;
-      option.textContent = pair;
-      symbolSelect.appendChild(option);
-    });
-
-    // Expert Strategy Selection
-    document.getElementById('entry-strategy').addEventListener('change', (e) => {
-      const value = e.target.value;
-      if (value === 'Expert Martingale') {
-        // Set parameters for Martingale
-        document.getElementById('stop-loss').value = '10';
-        document.getElementById('take-profit').value = '5';
-        // etc.
-      } else if (value === 'Expert DCA') {
-        // Set for DCA
-        document.getElementById('interval-drop').value = '5';
-        document.getElementById('max-orders').value = '5';
-      } else if (value === 'Expert Grid') {
-        // Set for Grid
-        document.getElementById('interval-drop').value = '3';
-        document.getElementById('max-orders').value = '10';
-      }
-      // For custom, user edits freely
-    });
-
-    // Bot Dropdown
-    document.getElementById('create-bot-btn').addEventListener('click', () => {
-      document.getElementById('bot-dropdown').classList.toggle('active');
-    });
-
-    // Bot Item Click to Open Creation
-    document.querySelectorAll('.bot-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const botType = item.dataset.bot;
-        document.getElementById('bot-dropdown').classList.remove('active');
+    // Bot Type Click to Open Creation
+    document.querySelectorAll('.bot-type').forEach(type => {
+      type.addEventListener('click', () => {
+        const botType = type.dataset.bot;
+        document.getElementById('bot-type-modal-bg').classList.remove('active');
         document.getElementById('bot-creation-modal-bg').classList.add('active');
         document.getElementById('bot-creation-title').textContent = `Create ${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot`;
         // Customize form for bot type
