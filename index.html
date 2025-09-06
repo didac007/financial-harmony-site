@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -555,16 +554,26 @@
         </tbody>
       </table>
     </section>
-    <!-- Bots -->
-    <section id="bots" class="section">
-      <h2>Bots</h2>
-      <div class="bot-dropdown" id="bot-dropdown">
-        <div class="bot-item" data-bot="signals">Signals Bot</div>
-        <div class="bot-item" data-bot="grid">Grid Bot</div>
-        <div class="bot-item" data-bot="dca">DCA Bot</div>
-        <div class="bot-item" data-bot="tradingview">TradingView Bot</div>
+    <!-- My Signals Bots -->
+    <section id="bots-signals" class="section">
+      <h2>My Signals Bots</h2>
+      <div class="nav-tabs">
+        <button class="nav-tab active">Live Trading</button>
+        <button class="nav-tab">Demo</button>
+      </div>
+      <select>
+        <option>Last Trade Opened</option>
+      </select>
+      <input type="text" placeholder="Search...">
+      <button>Filters</button>
+      <button>+ Create Bot</button>
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
+        <div class="stat-card"><h3>Closed Trades</h3><p>0</p></div>
+        <div class="stat-card"><h3>Accumulated Profit</h3><p>No data collected</p></div>
+        <div class="stat-card"><h3>Profit By Day</h3><p>No data collected</p></div>
       </div>
     </section>
+    /* Similar sections for other bots */
     <!-- Trading Terminal -->
     <section id="terminal" class="section">
       <h2>Trading Terminal</h2>
@@ -843,118 +852,30 @@
       </div>
     </div>
   </div>
-  <!-- Bot Type Selection Modal -->
-  <div class="bot-modal-bg" id="bot-type-modal-bg">
-    <div class="bot-modal">
-      <button class="close-btn" id="close-bot-type-modal">&times;</button>
-      <h2>Create New Bot</h2>
-      <div class="bot-guide">
-        <div class="bot-type" data-bot="signals">
-          <i class="ri-signal-tower-line"></i>
-          <h3>Signals Bot</h3>
-          <p>Follow signals from your favorite groups or our marketplace's experts, executing trades automatically.</p>
-        </div>
-        <div class="bot-type" data-bot="dca">
-          <i class="ri-line-chart-line"></i>
-          <h3>DCA Bot</h3>
-          <p>Utilize dollar-cost averaging strategy with Cornix's advanced features.</p>
-        </div>
-        <div class="bot-type" data-bot="grid">
-          <i class="ri-grid-line"></i>
-          <h3>Grid Bot</h3>
-          <p>Automatically place buy and sell orders at preset levels, profiting from market fluctuations.</p>
-        </div>
-        <div class="bot-type" data-bot="tradingview">
-          <i class="ri-line-chart-line"></i>
-          <h3>TradingView Bot</h3>
-          <p>Link TradingView alerts to Cornix for automatic execution based on your strategies and indicators.</p>
-        </div>
-        <div class="bot-type" data-bot="manual">
-          <i class="ri-hand-coin-line"></i>
-          <h3>Manual Trading</h3>
-          <p>Execute trades manually with precision and flexibility, utilizing Cornix's powerful tools.</p>
-        </div>
+  <!-- Payment Modal -->
+  <div class="pay-modal-bg" id="pay-modal-bg">
+    <div class="pay-modal" id="pay-modal">
+      <button class="close-btn" id="close-pay-modal" title="Close">&times;</button>
+      <div class="plan-title" id="modal-plan-title"></div>
+      <div class="features-wrap" id="modal-plan-features"></div>
+      <div class="duration">
+        <label><input type="radio" name="duration" value="annually" checked>Annually <span style="background:#e0eaff;color:#2563eb;font-size:.97em;padding:2px 6px;border-radius:6px;margin-left:5px;">SAVE 33%</span></label>
+        <label><input type="radio" name="duration" value="monthly">Monthly</label>
       </div>
-    </div>
-  </div>
-  <!-- Bot Creation Modal -->
-  <div class="bot-modal-bg" id="bot-creation-modal-bg">
-    <div class="bot-modal">
-      <button class="close-btn" id="close-bot-creation-modal">&times;</button>
-      <h2 id="bot-creation-title">Create Bot</h2>
-      <form id="bot-form">
-        <div class="nav-tabs" style="margin-bottom: 16px;">
-          <button class="nav-tab active" data-tab="general">General</button>
-          <button class="nav-tab" data-tab="entries">Entries</button>
-          <button class="nav-tab" data-tab="take-profits">Take-Profits</button>
-          <button class="nav-tab" data-tab="stop">Stop</button>
-          <button class="nav-tab" data-tab="advanced">Advanced</button>
-        </div>
-        <div class="tab-content active" id="general">
-          <label for="bot-name">Bot Name</label>
-          <input type="text" id="bot-name" value="BTC/USDT Bot">
-          <label for="account">Account</label>
-          <select id="account">
-            <option>My-Bitget-Spot-8D21</option>
-          </select>
-          <label for="symbol">Symbol</label>
-          <select id="symbol">
-            <option>BTC/USDT</option>
-            <option>ETH/USDT</option>
-            <option>ADA/USDT</option>
-            <option>XRP/USDT</option>
-            <option>SOL/USDT</option>
-            <!-- More pairs from Bitget, etc. -->
-          </select>
-          <label for="amount-per-trade">Amount Per Trade</label>
-          <input type="number" id="amount-per-trade" value="12.3">
-          <label>Direction</label>
-          <div>
-            <label><input type="radio" name="direction" value="long" checked> Long</label>
-            <label><input type="radio" name="direction" value="short"> Short</label>
-          </div>
-          <label for="margin-type">Margin Type</label>
-          <select id="margin-type">
-            <option>Isolated</option>
-            <option>Cross</option>
-          </select>
-          <label for="multiplier">Multiplier</label>
-          <input type="number" id="multiplier" value="1">
-        </div>
-        <div class="tab-content" id="entries">
-          <label for="entry-strategy">Entry Strategy</label>
-          <select id="entry-strategy">
-            <option>Expert Martingale (Double position after loss, stop-loss 10%)</option>
-            <option>Expert DCA (Buy every 5% drop, max 5 orders)</option>
-            <option>Expert Grid (Buy low/sell high in 3% range)</option>
-            <option>Custom</option>
-          </select>
-        </div>
-        <div class="tab-content" id="take-profits">
-          <label for="take-profit-levels">Take Profit Levels</label>
-          <input type="text" id="take-profit-levels" placeholder="e.g. 1.5%, 3%, 5%">
-        </div>
-        <div class="tab-content" id="stop">
-          <label for="stop-loss">Stop Loss (%)</label>
-          <input type="number" id="stop-loss" value="10">
-          <label for="trailing-stop">Trailing Stop (%)</label>
-          <input type="number" id="trailing-stop" value="2">
-        </div>
-        <div class="tab-content" id="advanced">
-          <label for="uuid-open">UUID for Trade Opening</label>
-          <input type="text" id="uuid-open">
-          <label for="uuid-close">UUID for Trade Closing</label>
-          <input type="text" id="uuid-close">
-          <label for="max-orders">Max Orders</label>
-          <input type="number" id="max-orders" value="5">
-          <label for="interval-drop">Interval Drop (%)</label>
-          <input type="number" id="interval-drop" value="5">
-        </div>
-        <div class="tradingview-widget-container" style="height: 300px; margin-top: 20px;">
-          <div id="bot-chart-widget"></div>
-        </div>
-        <button type="submit">Create Bot</button>
-      </form>
+      <div class="price-row" id="modal-plan-price"></div>
+      <div class="payment-methods">
+        <button type="button" class="active" data-method="paypal"><i class="ri-paypal-fill"></i> PayPal</button>
+        <button type="button" data-method="credit-card"><i class="ri-bank-card-line"></i> Credit Card</button>
+        <button type="button" data-method="crypto"><i class="ri-coins-line"></i> Crypto</button>
+      </div>
+      <div style="font-size:.97em; color:var(--muted);margin-bottom:12px;">
+        Your plan will start today and will auto-renew on the same date next year or month.
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="authorize" /> I authorize Financial Harmony to charge me automatically every period until I cancel my subscription.
+      </div>
+      <button class="promo-link" onclick="alert('Promo feature not implemented')">+ Add Promo Code</button>
+      <button class="pay-btn" id="pay-btn">Pay Now</button>
     </div>
   </div>
   <script>
@@ -1464,4 +1385,3 @@
   </script>
 </body>
 </html>
-```
