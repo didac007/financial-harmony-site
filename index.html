@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -435,7 +436,7 @@
     <button class="sidebar-icon" data-section="terminal" title="Trading Terminal"><i class="ri-bar-chart-grouped-line"></i> <span class="label">Terminal</span></button>
     <button class="sidebar-icon" data-section="signals" title="Signals"><i class="ri-broadcast-line"></i> <span class="label">Signals</span></button>
     <button class="sidebar-icon" data-section="marketplace" title="Marketplace"><i class="ri-store-3-line"></i> <span class="label">Marketplace</span></button>
-    <button class="sidebar-icon" data-section="course" title="Curso BTC"><i class="ri-book-open-line"></i> <span class="label">Curso BTC</span></button>
+    <button class="sidebar-icon" data-section="course" title="BTC"><i class="ri-book-open-line"></i> <span class="label">BTC</span></button>
     <button class="sidebar-icon" data-section="billing" title="Billing"><i class="ri-money-dollar-circle-line"></i> <span class="label">Billing</span></button>
     <button class="sidebar-icon" data-section="account" title="Account & Security"><i class="ri-user-settings-line"></i> <span class="label">Account</span></button>
     <button class="sidebar-icon" data-section="help" title="Ayuda/Soporte"><i class="ri-customer-service-2-line"></i> <span class="label">Ayuda</span></button>
@@ -554,93 +555,14 @@
         </tbody>
       </table>
     </section>
-    <!-- Signals Bot -->
-    <section id="signals-bot" class="section">
-      <h2>Signals Bot</h2>
-      <div class="nav-tabs">
-        <button class="nav-tab active">Live Trading</button>
-        <button class="nav-tab">Demo</button>
-      </div>
-      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap:wrap;">
-        <div class="stat-card"><h3>Closed Trades</h3><p>0</p></div>
-        <div class="stat-card"><h3>Profit</h3><p>$0</p></div>
-      </div>
-      <div class="chart-container"><canvas id="accumulated-profit-chart"></canvas></div>
-      <div class="chart-container"><canvas id="profit-by-day-chart"></canvas></div>
-      <button class="create-bot">+ Create Bot</button>
-    </section>
-    <!-- Grid Bot -->
-    <section id="grid-bot" class="section">
-      <h2>Grid Bot</h2>
-      <form>
-        <label>Bot Name</label>
-        <input type="text" value="BTC/USDT Grid Bot">
-        <label>Account</label>
-        <select><option>My-Bitget-Spot-8D21</option></select>
-        <label>Symbol</label>
-        <input type="text" value="BTC/USDT">
-        <label>Price Range (30%)</label>
-        <input type="text" value="80269.65 - 114670.94">
-        <label>Grids</label>
-        <input type="number" value="5">
-        <label>Amount Per Trade</label>
-        <input type="number" value="11.28">
-        <button type="submit">Create Grid Bot</button>
-      </form>
-      <div class="tradingview-widget-container" style="height: 500px; margin-top: 20px;">
-        <div id="grid-bot-chart"></div>
-      </div>
-    </section>
-    <!-- DCA Bot -->
-    <section id="dca-bot" class="section">
-      <h2>DCA Bot</h2>
-      <form>
-        <label>Bot Name</label>
-        <input type="text" value="BTC/USDT DCA Bot">
-        <label>Account</label>
-        <select><option>My-Bitget-Spot-8D21</option></select>
-        <label>Symbol</label>
-        <input type="text" value="BTC/USDT">
-        <label>Amount Per Trade</label>
-        <input type="number" value="6.31">
-        <label>Available Balance</label>
-        <p>27.269 USDT (27.26 USD)</p>
-        <label>Bot Amount Value</label>
-        <p>6.31 USD (23.14%)</p>
-        <button type="submit">Create DCA Bot</button>
-      </form>
-      <div class="tradingview-widget-container" style="height: 500px; margin-top: 20px;">
-        <div id="dca-bot-chart"></div>
-      </div>
-    </section>
-    <!-- TradingView Bot -->
-    <section id="tradingview-bot" class="section">
-      <h2>TradingView Bot</h2>
-      <form>
-        <label>Bot Name</label>
-        <input type="text" value="BTC/USDT TV Bot">
-        <label>Account</label>
-        <select><option>My-Bitget-Futures-8D21</option></select>
-        <label>Symbol</label>
-        <input type="text" value="BTC/USDT">
-        <label>Amount Per Trade</label>
-        <input type="number" value="12.3">
-        <label>Direction</label>
-        <div>
-          <label><input type="radio" name="direction" value="long" checked> Long</label>
-          <label><input type="radio" name="direction" value="short"> Short</label>
-        </div>
-        <label>Margin Type</label>
-        <select>
-          <option>Isolated</option>
-          <option>Cross</option>
-        </select>
-        <label>Multiplier</label>
-        <input type="number" value="1">
-        <button type="submit">Create TradingView Bot</button>
-      </form>
-      <div class="tradingview-widget-container" style="height: 500px; margin-top: 20px;">
-        <div id="tradingview-bot-chart"></div>
+    <!-- Bots -->
+    <section id="bots" class="section">
+      <h2>Bots</h2>
+      <div class="bot-dropdown" id="bot-dropdown">
+        <div class="bot-item" data-bot="signals">Signals Bot</div>
+        <div class="bot-item" data-bot="grid">Grid Bot</div>
+        <div class="bot-item" data-bot="dca">DCA Bot</div>
+        <div class="bot-item" data-bot="tradingview">TradingView Bot</div>
       </div>
     </section>
     <!-- Trading Terminal -->
@@ -687,9 +609,9 @@
         <div class="stat-card"><h3>Crypto Dreams</h3><p>Not enough reviews</p><button>Free Trial</button></div>
       </div>
     </section>
-    <!-- Curso BTC Esta -->
+    <!-- BTC -->
     <section id="course" class="section">
-      <h2>Curso BTC Esta</h2>
+      <h2>BTC</h2>
       <p>Para acceder al curso, sigue todos los perfiles en redes sociales a continuación y marca las casillas una vez que lo hayas hecho. Luego, responde correctamente al cuestionario. Una vez completadas todas las tareas, se revelará el enlace de Telegram.</p>
       <ul class="social-list">
         <li class="social-item">
@@ -847,10 +769,10 @@
         <div style="flex:1;min-width:290px;">
           <div class="stat-card" style="text-align:left;">
             <h3>Basic Information</h3>
-            <div><b>Full Name:</b> </div>
-            <div><b>User Name:</b> </div>
-            <div><b>Email:</b> </div>
-            <div><b>Password:</b> <a href="#" style="color:var(--primary);margin-left:7px;">Change</a></div>
+            <div><b>Full Name:</b> diego mercado ferreira</div>
+            <div><b>User Name:</b> didac007</div>
+            <div><b>Email:</b> eoamordavida@hotmail.com</div>
+            <div><b>Password:</b> ******** <a href="#" style="color:var(--primary);margin-left:7px;">Change</a></div>
           </div>
           <div class="stat-card" style="text-align:left;">
             <h3>External Accounts</h3>
@@ -1209,22 +1131,98 @@
       if(e.target===document.getElementById('chart-modal-bg')) document.getElementById('chart-modal-bg').classList.remove('active');
     };
 
-    // Bot Type Selection Modal
+    // Bot Creation Modal
     document.getElementById('create-bot-btn').onclick = () => {
-      document.getElementById('bot-type-modal-bg').classList.add('active');
+      document.getElementById('bot-creation-modal-bg').classList.add('active');
     };
-    document.getElementById('close-bot-type-modal').onclick = () => {
-      document.getElementById('bot-type-modal-bg').classList.remove('active');
+    document.getElementById('close-bot-creation-modal').onclick = () => {
+      document.getElementById('bot-creation-modal-bg').classList.remove('active');
     };
-    document.getElementById('bot-type-modal-bg').onclick = (e) => {
-      if(e.target===document.getElementById('bot-type-modal-bg')) document.getElementById('bot-type-modal-bg').classList.remove('active');
+    document.getElementById('bot-creation-modal-bg').onclick = (e) => {
+      if(e.target===document.getElementById('bot-creation-modal-bg')) document.getElementById('bot-creation-modal-bg').classList.remove('active');
     };
+    document.getElementById('bot-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Bot created with selected strategy!');
+      document.getElementById('bot-creation-modal-bg').classList.remove('active');
+    });
 
-    // Bot Type Click to Open Creation
-    document.querySelectorAll('.bot-type').forEach(type => {
-      type.addEventListener('click', () => {
-        const botType = type.dataset.bot;
-        document.getElementById('bot-type-modal-bg').classList.remove('active');
+    // Bot Form Tabs
+    const botTabs = document.querySelectorAll('.bot-modal .nav-tab');
+    const botContents = document.querySelectorAll('.bot-modal .tab-content');
+
+    botTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        botTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        botContents.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Load TradingView Chart in Bot Modal
+    new TradingView.widget({
+      "container_id": "bot-chart-widget",
+      "width": "100%",
+      "height": "300",
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "1",
+      "locale": "es",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "studies": ["MA", "RSI"],
+      "show_popup_button": true,
+      "popup_width": "1000",
+      "popup_height": "650"
+    });
+
+    // Load Exchange Pairs (simulated for Bitget, can fetch from API)
+    const exchangePairs = [
+      'BNT/USDT', 'BOME/USDT', 'BR/USDT', 'BRETT/USDT', 'BROCCOLI/USDT', 'BSV/USDT', 'BSW/USDT', 'BTC/USDT'
+      // Add more from Bitget or other exchanges
+    ];
+    const symbolSelect = document.getElementById('symbol');
+    exchangePairs.forEach(pair => {
+      const option = document.createElement('option');
+      option.value = pair;
+      option.textContent = pair;
+      symbolSelect.appendChild(option);
+    });
+
+    // Expert Strategy Selection
+    document.getElementById('entry-strategy').addEventListener('change', (e) => {
+      const value = e.target.value;
+      if (value === 'Expert Martingale') {
+        // Set parameters for Martingale
+        document.getElementById('stop-loss').value = '10';
+        document.getElementById('take-profit').value = '5';
+        // etc.
+      } else if (value === 'Expert DCA') {
+        // Set for DCA
+        document.getElementById('interval-drop').value = '5';
+        document.getElementById('max-orders').value = '5';
+      } else if (value === 'Expert Grid') {
+        // Set for Grid
+        document.getElementById('interval-drop').value = '3';
+        document.getElementById('max-orders').value = '10';
+      }
+      // For custom, user edits freely
+    });
+
+    // Bot Dropdown
+    document.getElementById('create-bot-btn').addEventListener('click', () => {
+      document.getElementById('bot-dropdown').classList.toggle('active');
+    });
+
+    // Bot Item Click to Open Creation
+    document.querySelectorAll('.bot-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const botType = item.dataset.bot;
+        document.getElementById('bot-dropdown').classList.remove('active');
         document.getElementById('bot-creation-modal-bg').classList.add('active');
         document.getElementById('bot-creation-title').textContent = `Create ${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot`;
         // Customize form for bot type
@@ -1466,3 +1464,4 @@
   </script>
 </body>
 </html>
+```
